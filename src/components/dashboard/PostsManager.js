@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import ReactQuill from 'react-quill';
 import './quill.css';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 const quillModules = {
   toolbar: {
@@ -48,7 +49,6 @@ const quillModules = {
     }
   }
 };
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 const PostsManager = ({ posts, onChange }) => {
   const [formData, setFormData] = useState({
