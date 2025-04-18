@@ -1,0 +1,10 @@
+@import 'react-quill/dist/quill.snow.css';
+/* Custom styles for your editor can go here */
+.ql-container {
+  min-height: 200px;
+  background: #fff;
+  border-radius: 6px;
+}
+.ql-toolbar {
+  border-radius: 6px 6px 0 0;
+}
