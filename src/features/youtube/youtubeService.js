@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const API_URL = "/api/videos/";
+
 
 // Get all videos
 const getVideos = async () => {
-  const response = await axios.get(API_URL);
+  const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/videos`);
   return response.data;
 };
 
 // Get featured videos
 const getFeaturedVideos = async () => {
-  const response = await axios.get(API_URL + "featured");
+  const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/videos/featured`);
   return response.data;
 };
 
@@ -22,7 +22,7 @@ const createVideo = async (videoData, token) => {
     },
   };
 
-  const response = await axios.post(API_URL, videoData, config);
+  const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/videos`, videoData, config);
   return response.data;
 };
 
@@ -34,7 +34,7 @@ const updateVideo = async (id, videoData, token) => {
     },
   };
 
-  const response = await axios.put(API_URL + id, videoData, config);
+  const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${id}`, videoData, config);
   return response.data;
 };
 
@@ -46,7 +46,7 @@ const deleteVideo = async (id, token) => {
     },
   };
 
-  const response = await axios.delete(API_URL + id, config);
+  const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${id}`, config);
   return response.data;
 };
 
