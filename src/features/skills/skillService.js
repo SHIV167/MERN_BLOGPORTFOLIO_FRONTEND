@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_URL = "/api/skills/";
+
 
 // Get all skills
 const getSkills = async () => {
-  const response = await axios.get(API_URL);
+  const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/skills`);
   return response.data;
 };
 
@@ -16,7 +16,7 @@ const createSkill = async (skillData, token) => {
     },
   };
 
-  const response = await axios.post(API_URL, skillData, config);
+  const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/skills`, skillData, config);
   return response.data;
 };
 
@@ -28,7 +28,7 @@ const updateSkill = async (id, skillData, token) => {
     },
   };
 
-  const response = await axios.put(API_URL + id, skillData, config);
+  const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/skills/${id}`, skillData, config);
   return response.data;
 };
 
@@ -40,7 +40,7 @@ const deleteSkill = async (id, token) => {
     },
   };
 
-  const response = await axios.delete(API_URL + id, config);
+  const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/skills/${id}`, config);
   return response.data;
 };
 
