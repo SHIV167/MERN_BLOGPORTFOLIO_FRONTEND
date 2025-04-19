@@ -51,7 +51,9 @@ const VideosManager = ({ videos, onChange }) => {
         featured: !!formData.featured
       };
       const token = localStorage.getItem('token');
-      const url = editingId ? `/api/videos/${editingId}` : '/api/videos';
+      const url = editingId 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/videos/${editingId}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/videos`;
       const method = editingId ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
@@ -173,7 +175,7 @@ const VideosManager = ({ videos, onChange }) => {
                           setError(null);
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`/api/videos/${video._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
+                            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
                             if (!res.ok) throw new Error((await res.json()).message || 'Failed to delete video');
                             if (typeof onChange === 'function') onChange();
                           } catch (err) {
