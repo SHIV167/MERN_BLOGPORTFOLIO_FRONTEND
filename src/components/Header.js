@@ -102,6 +102,18 @@ export default function Header() {
                         <Button variant="ghost">{label}</Button>
                       </RouterLink>
                     ))}
+                <Button
+                  as="a"
+                  href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="ghost"
+                  colorScheme="purple"
+                  transition="all 0.2s"
+                  _hover={{ transform: 'translateY(-2px)', boxShadow: 'lg' }}
+                >
+                  MY RESUME
+                </Button>
               </HStack>
             </HStack>
 
@@ -142,6 +154,18 @@ export default function Header() {
                   <Button w="full" variant="ghost">{label}</Button>
                 </RouterLink>
               ))}
+              <Button
+                as="a"
+                href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="ghost"
+                colorScheme="purple"
+                transition="all 0.2s"
+                _hover={{ transform: 'translateX(4px)' }}
+              >
+                MY RESUME
+              </Button>
             </Stack>
             <HStack spacing={3} justify="center" mt={4}>
               <IconButton as="a" href="https://github.com/yourusername" aria-label="GitHub" icon={<FaGithub />} />
