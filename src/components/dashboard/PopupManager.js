@@ -9,11 +9,13 @@ export default function PopupManager() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const toast = useToast();
+  const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    fetch('/api/popup/all')
+    fetch(`${baseUrl}/api/popup/all`)
       .then(res => res.json())
-      .then(data => { setPopups(data); setLoading(false); });
+      .then(data => { setPopups(data); setLoading(false); })
+      .catch(err => { console.error('Popup load error', err); setLoading(false); toast({ title: 'Error loading popups', status: 'error', duration: 3000 }); });
   }, [saving]);
 
   const handleChange = e => {
@@ -27,7 +29,7 @@ export default function PopupManager() {
     setUploading(true);
     const formData = new FormData();
     formData.append('image', file);
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const res = await fetch(`${baseUrl}/api/upload`, { method: 'POST', body: formData });
     const data = await res.json();
     setCurrent(prev => ({ ...prev, [field]: data.url }));
     setUploading(false);
@@ -36,22 +38,33 @@ export default function PopupManager() {
   const handleSave = async () => {
     setSaving(true);
     const method = current._id ? 'PUT' : 'POST';
-    const url = current._id ? `/api/popup/${current._id}` : '/api/popup';
-    await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(current)
-    });
-    setSaving(false);
-    setCurrent(null);
-    toast({ title: 'Popup saved!', status: 'success', duration: 2000 });
+    const url = current._id ? `${baseUrl}/api/popup/${current._id}` : `${baseUrl}/api/popup`;
+    try {
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(current)
+      });
+      setSaving(false);
+      setCurrent(null);
+      toast({ title: 'Popup saved!', status: 'success', duration: 2000 });
+    } catch (err) {
+      console.error('Popup save error', err);
+      setSaving(false);
+      toast({ title: 'Error saving popup', status: 'error', duration: 3000 });
+    }
   };
 
   const handleDelete = async (id) => {
-    await fetch(`/api/popup/${id}`, { method: 'DELETE' });
-    setPopups(popups.filter(p => p._id !== id));
-    setCurrent(null);
-    toast({ title: 'Popup deleted!', status: 'info', duration: 2000 });
+    try {
+      await fetch(`${baseUrl}/api/popup/${id}`, { method: 'DELETE' });
+      setPopups(popups.filter(p => p._id !== id));
+      setCurrent(null);
+      toast({ title: 'Popup deleted!', status: 'info', duration: 2000 });
+    } catch (err) {
+      console.error('Popup delete error', err);
+      toast({ title: 'Error deleting popup', status: 'error', duration: 3000 });
+    }
   };
 
   if (loading) return <Spinner />;
