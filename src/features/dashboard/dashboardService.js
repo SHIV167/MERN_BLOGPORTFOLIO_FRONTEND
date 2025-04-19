@@ -19,7 +19,23 @@ const dashboardService = {
     return response.data;
   },
 
-  // Add similar methods for skills and videos
+  // Projects
+  getProjects: async () => {
+    const response = await axios.get(API_URL + 'projects');
+    return response.data;
+  },
+
+  // Skills
+  getSkills: async () => {
+    const response = await axios.get(API_URL + 'skills');
+    return response.data;
+  },
+
+  // Videos
+  getVideos: async () => {
+    const response = await axios.get(API_URL + 'videos');
+    return response.data;
+  },
 };
 
 export default dashboardService;
