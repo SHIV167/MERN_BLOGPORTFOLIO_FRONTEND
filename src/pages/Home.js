@@ -64,13 +64,19 @@ const techIcons = [
   { icon: SiMongodb, color: '#47A248', label: 'MongoDB' },
 ];
 
+// Gradients for video cards (Chakra shorthand)
 const gradients = [
-  'linear(to-br, #a18cd1 0%, #fbc2eb 100%)',
-  'linear(to-br, #f7971e 0%, #ffd200 100%)',
-  'linear(to-br, #43cea2 0%, #185a9d 100%)',
+  'linear(to-br, purple.500, pink.300)',
+  'linear(to-br, orange.400, yellow.300)',
+  'linear(to-br, teal.400, blue.300)',
 ];
-
-const getRandomGradient = () => gradients[Math.floor(Math.random() * gradients.length)];
+// CSS gradients for skills/projects cards
+const cardGradients = [
+  'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+  'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)',
+  'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
+];
+const getRandomCardGradient = () => cardGradients[Math.floor(Math.random() * cardGradients.length)];
 
 const CircleTechIcons = () => {
   const radius = 170; // px
@@ -447,15 +453,16 @@ const Home = () => {
             {Object.entries(groupedSkills).length > 0 ? Object.entries(groupedSkills).map(([category, skills]) => (
                 <Box
                   key={category}
-                  bgGradient={getRandomGradient()}
+                  bg={getRandomCardGradient()}
                   color="white"
                   borderRadius="xl"
                   boxShadow="md"
                   borderWidth="1px"
-                  borderColor="gray.200"
+                  borderColor="transparent"
                   overflow="hidden"
                   p={6}
                   minH="220px"
+                  mb={4}
                 >
                   <Heading fontSize="lg" color="#231942" fontWeight={700} mb={3}>
                     {category}
@@ -500,12 +507,12 @@ const Home = () => {
             {Array.isArray(projects) && projects.length > 0 ? projects.slice(0, 3).map((project) => (
               <Box
                 key={project._id}
-                bgGradient={getRandomGradient()}
+                bg={getRandomCardGradient()}
                 color="white"
                 borderRadius="xl"
                 boxShadow="md"
                 borderWidth="1px"
-                borderColor="gray.200"
+                borderColor="transparent"
                 overflow="hidden"
                 display="flex"
                 flexDirection="column"
