@@ -25,7 +25,7 @@ const ProjectsManager = ({ projects = [], onChange }) => {
                 <Button as={Link} to={`/dashboard/projects/edit/${project._id}`} colorScheme="blue" size="sm">Edit</Button>
                 <Button colorScheme="red" size="sm" onClick={async () => {
                   if(window.confirm('Are you sure you want to delete this project?')) {
-                    await fetch(`/api/projects/${project._id}`, { method: 'DELETE', credentials: 'include' });
+                    await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/projects/${project._id}`, { method: 'DELETE', credentials: 'include' });
                     if(typeof onChange === 'function') onChange();
                   }
                 }}>Delete</Button>
