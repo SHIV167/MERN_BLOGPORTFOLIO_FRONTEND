@@ -79,8 +79,8 @@ export default function PopupManager() {
           {popups.map(popup => (
             <Tr key={popup._id}>
               <Td>{popup.title}</Td>
-              <Td>{popup.imageDesktop && <Image src={popup.imageDesktop} maxH="40px" />}</Td>
-              <Td>{popup.imageMobile && <Image src={popup.imageMobile} maxH="40px" />}</Td>
+              <Td>{popup.imageDesktop && <Image src={`${baseUrl}${popup.imageDesktop}`} maxH="40px" />}</Td>
+              <Td>{popup.imageMobile && <Image src={`${baseUrl}${popup.imageMobile}`} maxH="40px" />}</Td>
               <Td>
                 D: {popup.enabledDesktop ? '✅' : '❌'}<br />M: {popup.enabledMobile ? '✅' : '❌'}
               </Td>
@@ -105,14 +105,14 @@ export default function PopupManager() {
             <Textarea name="content" value={current?.content || ''} onChange={handleChange} />
             <FormLabel>Desktop Image</FormLabel>
             <Input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'imageDesktop')} isDisabled={uploading} />
-            {current?.imageDesktop && <Image src={current.imageDesktop} maxH="120px" borderRadius="md" />}
+            {current?.imageDesktop && <Image src={`${baseUrl}${current.imageDesktop}`} maxH="120px" borderRadius="md" />}
             <HStack>
               <FormLabel htmlFor="enabledDesktop" mb="0">Enable on Desktop</FormLabel>
               <Switch id="enabledDesktop" name="enabledDesktop" isChecked={current?.enabledDesktop || false} onChange={handleChange} />
             </HStack>
             <FormLabel>Mobile Image</FormLabel>
             <Input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'imageMobile')} isDisabled={uploading} />
-            {current?.imageMobile && <Image src={current.imageMobile} maxH="120px" borderRadius="md" />}
+            {current?.imageMobile && <Image src={`${baseUrl}${current.imageMobile}`} maxH="120px" borderRadius="md" />}
             <HStack>
               <FormLabel htmlFor="enabledMobile" mb="0">Enable on Mobile</FormLabel>
               <Switch id="enabledMobile" name="enabledMobile" isChecked={current?.enabledMobile || false} onChange={handleChange} />
