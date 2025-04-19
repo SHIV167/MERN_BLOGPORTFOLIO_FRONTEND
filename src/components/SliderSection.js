@@ -10,7 +10,7 @@ const SliderArrow = (props) => {
       style={{
         ...style,
         display: "block",
-        background: "rgba(255,255,255,0.8)",
+        background: "#311B92",
         color: "#4317b7",
         border: "none",
         borderRadius: "50%",
@@ -30,7 +30,7 @@ const SliderArrow = (props) => {
       aria-label={arrowType === 'next' ? 'Next Slide' : 'Previous Slide'}
       onClick={onClick}
     >
-      {arrowType === 'next' ? '→' : '←'}
+      {arrowType === 'next' ? '' : ''}
     </button>
   );
 };
