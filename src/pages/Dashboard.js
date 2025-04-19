@@ -71,14 +71,27 @@ function Dashboard() {
         });
         messagesData = await messagesRes.json();
       }
-      setPosts(await postsRes.json());
-      setProjects(await projectsRes.json());
-      setSkills(await skillsRes.json());
-      setVideos(await videosRes.json());
-      setMessages(messagesData);
-      setUnreadCount(messagesData.filter(msg => msg.status === 'unread').length);
+      const parseJsonSafe = async (res) => {
+  const contentType = res.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    return await res.json();
+  }
+  return [];
+};
+setPosts(await parseJsonSafe(postsRes));
+setProjects(await parseJsonSafe(projectsRes));
+setSkills(await parseJsonSafe(skillsRes));
+setVideos(await parseJsonSafe(videosRes));
+setMessages(Array.isArray(messagesData) ? messagesData : []);
+setUnreadCount(Array.isArray(messagesData) ? messagesData.filter(msg => msg.status === 'unread').length : 0);
     } catch (err) {
       // Optionally handle error
+      setPosts([]);
+      setProjects([]);
+      setSkills([]);
+      setVideos([]);
+      setMessages([]);
+      setUnreadCount(0);
     }
     setIsLoading(false);
   };

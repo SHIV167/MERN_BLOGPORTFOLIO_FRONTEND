@@ -79,8 +79,17 @@ const SkillsManager = ({ skills, onChange }) => {
         body: JSON.stringify(formattedData),
         credentials: 'include',
       });
-      if (!res.ok) throw new Error((await res.json()).message || `Failed to ${editingId ? 'update' : 'add'} skill`);
-      setFormData({ name: '', level: '', category: '' });
+      if (!res.ok) {
+  let message = `Failed to ${editingId ? 'update' : 'add'} skill`;
+  try {
+    const data = await res.json();
+    if (data && data.message) message = data.message;
+  } catch (e) {
+    // Not JSON, keep default message
+  }
+  throw new Error(message);
+}
+      setFormData({ name: '', proficiency: '', category: '', description: '' });
       setEditingId(null);
       showToast(
         'Success',
@@ -150,9 +159,9 @@ const SkillsManager = ({ skills, onChange }) => {
               {editingId && (
                 <Button
                   onClick={() => {
-                    setFormData({ name: '', proficiency: '', category: '', description: '' });
-                    setEditingId(null);
-                  }}
+  setFormData({ name: '', proficiency: '', category: '', description: '' });
+  setEditingId(null);
+}}
                 >
                   Cancel Edit
                 </Button>
@@ -187,6 +196,7 @@ const SkillsManager = ({ skills, onChange }) => {
                           name: skill.name,
                           proficiency: skill.proficiency,
                           category: skill.category,
+                          description: skill.description || ''
                         });
                         setEditingId(skill._id);
                         window.scrollTo(0, 0);

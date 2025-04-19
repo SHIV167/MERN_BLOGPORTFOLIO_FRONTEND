@@ -43,7 +43,13 @@ export default function Header() {
 
   useEffect(() => {
     fetch("/api/header-menu")
-      .then((r) => r.json())
+      .then(async (r) => {
+        const contentType = r.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          return r.json();
+        }
+        return [];
+      })
       .then((data) =>
         Array.isArray(data)
           ? setMenuItems(data.filter((i) => i.visible).sort((a, b) => a.order - b.order))

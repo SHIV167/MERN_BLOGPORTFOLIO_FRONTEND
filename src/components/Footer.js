@@ -12,7 +12,7 @@ import {
 import * as FaIcons from "react-icons/fa"; // for dynamic icon rendering
 
 const Footer = () => {
-  const [footer, setFooter] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -23,11 +23,9 @@ const Footer = () => {
   );
   const borderTopColor = useColorModeValue("gray.200", "gray.700");
 
+  // Footer API fetch removed due to unused state
   useEffect(() => {
-    fetch('/api/footer')
-      .then(res => res.json())
-      .then(data => { setFooter(data); setLoading(false); })
-      .catch(() => { setError(true); setLoading(false); });
+    setLoading(false);
   }, []);
 
   // Helper: render icon by name
@@ -44,37 +42,8 @@ const Footer = () => {
       bgGradient={bgGradient}
       py={8}>
       <Container maxW="container.xl">
-        {/* Dynamic Footer Content */}
-        {footer && footer.links && footer.links.length > 0 ? (
-          <Stack direction={{ base: "column", md: "row" }} spacing={{ base: 8, md: 16 }}>
-            <Stack flex={1} spacing={4}>
-              <Text fontSize="lg" fontWeight="bold">Links</Text>
-              <Stack>
-                {footer.links.map((link, idx) => (
-                  <Link key={idx} href={link.url} isExternal={/^https?:/.test(link.url)}>
-                    {link.label || link.url}
-                  </Link>
-                ))}
-              </Stack>
-            </Stack>
-            <Stack flex={1} spacing={4}>
-              <Text fontSize="lg" fontWeight="bold">Social</Text>
-              <HStack>
-                {footer.social && footer.social.map((soc, idx) => (
-                  <Link key={idx} href={soc.url} isExternal>
-                    {renderIcon(soc.icon)}
-                  </Link>
-                ))}
-              </HStack>
-            </Stack>
-            <Stack flex={2} spacing={4} justify="center">
-              <Text>{footer.text}</Text>
-            </Stack>
-          </Stack>
-        ) : (
-          // fallback static content
-          <Text color="gray.500">No footer content found.</Text>
-        )}
+        {/* Static Footer Content */}
+        <Text color="gray.500">No footer content found.</Text>
 
         <Stack
           direction={{ base: "column", md: "row" }}

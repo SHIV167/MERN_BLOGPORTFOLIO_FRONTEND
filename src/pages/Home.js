@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -134,6 +133,12 @@ const CircleTechIcons = () => {
   );
 };
 
+const gradients = [
+  'linear(to-br, #a18cd1 0%, #fbc2eb 100%)', // purple-pink
+  'linear(to-br, #f7971e 0%, #ffd200 100%)', // orange-yellow
+  'linear(to-br, #43cea2 0%, #185a9d 100%)', // teal-blue
+];
+
 const Home = () => {
   const dispatch = useDispatch();
   const { skills } = useSelector((state) => state.skills || { skills: [] });
@@ -156,13 +161,13 @@ const Home = () => {
   }, [dispatch]);
 
   // Group skills by category
-  const groupedSkills = skills?.reduce((acc, skill) => {
+  const groupedSkills = Array.isArray(skills) ? skills.reduce((acc, skill) => {
     if (!acc[skill.category]) {
       acc[skill.category] = [];
     }
     acc[skill.category].push(skill);
     return acc;
-  }, {}) || {};
+  }, {}) : {};
 
   const backgroundVariants = {
     animate: {
@@ -442,40 +447,44 @@ const Home = () => {
             My technical expertise and proficiency
           </Text>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {Object.entries(groupedSkills).map(([category, skills]) => (
-              <Box
-                key={category}
-                bg="white"
-                borderRadius="xl"
-                boxShadow="md"
-                borderWidth="1px"
-                borderColor="gray.200"
-                overflow="hidden"
-                p={6}
-                minH="220px"
-              >
-                <Heading fontSize="lg" color="#231942" fontWeight={700} mb={3}>
-                  {category}
-                </Heading>
-                <VStack align="start" spacing={4} width="100%">
-                  {skills.map((skill) => (
-                    <Box key={skill._id} width="100%">
-                      <HStack justify="space-between" mb={1}>
-                        <Text fontWeight={600} color="#231942">{skill.name}</Text>
-                        <Text fontWeight={600} color="purple.500">{skill.proficiency}%</Text>
-                      </HStack>
-                      <Progress
-                        value={skill.proficiency}
-                        colorScheme="purple"
-                        size="sm"
-                        rounded="full"
-                        bg="purple.50"
-                      />
-                    </Box>
-                  ))}
-                </VStack>
-              </Box>
-            ))}
+            {Object.entries(groupedSkills).length > 0 ? Object.entries(groupedSkills).map(([category, skills]) => (
+                <Box
+                  key={category}
+                  bg="white"
+                  borderRadius="xl"
+                  boxShadow="md"
+                  borderWidth="1px"
+                  borderColor="gray.200"
+                  overflow="hidden"
+                  p={6}
+                  minH="220px"
+                >
+                  <Heading fontSize="lg" color="#231942" fontWeight={700} mb={3}>
+                    {category}
+                  </Heading>
+                  <VStack align="start" spacing={4} width="100%">
+                    {skills.map((skill) => (
+                      <Box key={skill._id} width="100%">
+                        <HStack justify="space-between" mb={1}>
+                          <Text fontWeight={600} color="#231942">{skill.name}</Text>
+                          <Text fontWeight={600} color="purple.500">{skill.proficiency}%</Text>
+                        </HStack>
+                        <Progress
+                          value={skill.proficiency}
+                          colorScheme="purple"
+                          size="sm"
+                          rounded="full"
+                          bg="purple.50"
+                        />
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              )) : (
+                <Box py={10} textAlign="center">
+                  <Text color="gray.500">No skills found.</Text>
+                </Box>
+              )}
           </SimpleGrid>
         </Container>
       </Box>
@@ -490,7 +499,7 @@ const Home = () => {
             A selection of my recent work and professional collaborations
           </Text>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {projects?.slice(0, 3).map((project) => (
+            {Array.isArray(projects) && projects.length > 0 ? projects.slice(0, 3).map((project) => (
               <Box
                 key={project._id}
                 bg="white"
@@ -537,7 +546,7 @@ const Home = () => {
                   </Button>
                 </Box>
               </Box>
-            ))}
+            )) : null}
           </SimpleGrid>
         </Container>
       </Box>
@@ -592,72 +601,69 @@ const Home = () => {
             BLOGS
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {(posts || []).slice(0, 3).map((post, idx) => {
-              const gradients = [
-                'linear(to-br, #a18cd1 0%, #fbc2eb 100%)', // purple-pink
-                'linear(to-br, #f7971e 0%, #ffd200 100%)', // orange-yellow
-                'linear(to-br, #43cea2 0%, #185a9d 100%)', // teal-blue
-              ];
-              return (
-                <Box
-                  key={post._id}
-                  bgGradient={gradients[idx % gradients.length]}
-                  borderRadius="xl"
-                  boxShadow="xl"
-                  overflow="hidden"
-                  display="flex"
-                  flexDirection="column"
-                  minH="320px"
-                  transition="transform 0.18s, box-shadow 0.18s"
-                  _hover={{
-                    transform: 'translateY(-6px) scale(1.025)',
-                    boxShadow: '2xl',
-                  }}
-                >
-                  <Box className="image-container">
-                    <Image
-                      src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
-                      alt={post.title}
-                    />
-                  </Box>
-                  <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
-                    <Box>
-                      <Heading fontSize="lg" color="white" fontWeight={700} mb={2}>
-                        {post.title}
-                      </Heading>
-                      <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
-                        {post.excerpt ? stripHtml(post.excerpt).substring(0, 90) : (post.content ? stripHtml(post.content).substring(0, 90) + '...' : '')}
-                      </Text>
+            {Array.isArray(posts) && posts.length > 0 ? posts.slice(0, 3).map((post, idx) => (
+                  <Box
+                    key={post._id}
+                    bgGradient={gradients[idx % gradients.length]}
+                    rounded="2xl"
+                    boxShadow="xl"
+                    overflow="hidden"
+                    display="flex"
+                    flexDirection="column"
+                    minH="420px"
+                    transition="transform 0.18s, box-shadow 0.18s"
+                    _hover={{
+                      transform: 'translateY(-6px) scale(1.025)',
+                      boxShadow: '2xl',
+                    }}
+                  >
+                    <Box className="image-container">
+                      <Image
+                        src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
+                        alt={post.title}
+                      />
                     </Box>
-                    <Box mt={2}>
-                      <HStack spacing={6} color="whiteAlpha.800" fontSize="sm" mb={3}>
-                        <HStack spacing={2}>
-                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-2-2"/></svg>
-                          <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
+                    <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
+                      <Box>
+                        <Heading fontSize="xl" color="white" fontWeight={700} mb={2}>
+                          {post.title}
+                        </Heading>
+                        <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
+                          {post.excerpt ? stripHtml(post.excerpt).substring(0, 90) : (post.content ? stripHtml(post.content).substring(0, 90) + '...' : '')}
+                        </Text>
+                      </Box>
+                      <Box mt={2}>
+                        <HStack spacing={6} color="whiteAlpha.800" fontSize="sm" mb={3}>
+                          <HStack spacing={2}>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-2-2"/></svg>
+                            <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
+                          </HStack>
+                          <HStack spacing={2}>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+                            <Text>5 min read</Text>
+                          </HStack>
                         </HStack>
-                        <HStack spacing={2}>
-                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-                          <Text>5 min read</Text>
-                        </HStack>
-                      </HStack>
-                      <Button
-                        as={Link}
-                        to={`/blog/${post.slug}`}
-                        colorScheme="whiteAlpha"
-                        variant="outline"
-                        borderRadius="md"
-                        fontWeight={700}
-                        px={6}
-                        py={2}
-                        _hover={{ bg: 'whiteAlpha.200', borderColor: 'whiteAlpha.800' }}
-                      >
-                        Read More
-                      </Button>
+                        <Button
+                          as={Link}
+                          to={`/blog/${post.slug}`}
+                          colorScheme="whiteAlpha"
+                          variant="outline"
+                          borderRadius="md"
+                          fontWeight={700}
+                          px={6}
+                          py={2}
+                          _hover={{ bg: 'whiteAlpha.200', borderColor: 'whiteAlpha.800' }}
+                        >
+                          Read More
+                        </Button>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              );
-            })}
+                )) : (
+                  <Box py={10} textAlign="center">
+                    <Text color="whiteAlpha.900">No blog posts found.</Text>
+                  </Box>
+                )}
           </SimpleGrid>
         </Container>
       </Box>

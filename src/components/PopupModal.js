@@ -7,14 +7,20 @@ export default function PopupModal() {
 
   useEffect(() => {
     fetch('/api/popup')
-      .then(res => res.json())
+      .then(async res => {
+        const contentType = res.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          return res.json();
+        }
+        return [];
+      })
       .then(data => {
-        // data is now an array of eligible popups
         if (Array.isArray(data) && data.length > 0) {
           setPopup(data[0]);
           onOpen();
         }
-      });
+      })
+      .catch(() => setPopup(null));
     // eslint-disable-next-line
   }, []);
 

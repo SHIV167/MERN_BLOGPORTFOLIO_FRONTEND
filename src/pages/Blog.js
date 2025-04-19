@@ -82,7 +82,7 @@ function Blog() {
             All Blog Posts
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {posts.map((post, idx) => (
+            {Array.isArray(posts) && posts.length > 0 ? posts.map((post, idx) => (
               <Box
                 key={post._id}
                 bgGradient={gradients[idx % gradients.length]}
@@ -140,9 +140,13 @@ function Blog() {
                   </Box>
                 </Box>
               </Box>
-            ))}
-          </SimpleGrid>
-        </Container>
+            )) : (
+            <Box py={10} textAlign="center">
+              <Text color="whiteAlpha.900">No blog posts found.</Text>
+            </Box>
+           )}
+         </SimpleGrid>
+         </Container>
       </Box>
     </Box>
   );

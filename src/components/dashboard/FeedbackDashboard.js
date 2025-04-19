@@ -18,11 +18,11 @@ export default function FeedbackDashboard() {
   }, []);
 
   // Group feedback by postId
-  const grouped = feedback.reduce((acc, fb) => {
+  const grouped = Array.isArray(feedback) ? feedback.reduce((acc, fb) => {
     if (!acc[fb.postId]) acc[fb.postId] = { like: 0, love: 0, wow: 0 };
     acc[fb.postId][fb.emoji] = fb.count;
     return acc;
-  }, {});
+  }, {}) : {};
 
   return (
     <Box p={8}>

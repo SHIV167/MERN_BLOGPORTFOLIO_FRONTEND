@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Update this to match your backend port (5000)
-const API_URL = 'http://localhost:5000/api/users/';
+const API_URL = 'https://mern-blogportfolio-backend-server.onrender.com/api/users/';
 
 const authService = {
   login: async (userData) => {
