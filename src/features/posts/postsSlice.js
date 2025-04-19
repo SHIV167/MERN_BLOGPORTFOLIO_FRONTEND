@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+// All API calls now use process.env.REACT_APP_BACKEND_URL as the base URL
 
 const initialState = {
   posts: [],
@@ -15,7 +16,7 @@ export const getPosts = createAsyncThunk(
   "posts/getAll",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get("/api/posts");
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts`);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -29,7 +30,7 @@ export const getPost = createAsyncThunk(
   "posts/getOne",
   async (slug, thunkAPI) => {
     try {
-      const response = await axios.get(`/api/posts/${slug}`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${slug}`);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -50,7 +51,7 @@ export const createPost = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       };
-      const response = await axios.post("/api/posts", postData, config);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/posts`, postData, config);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -71,7 +72,7 @@ export const updatePost = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       };
-      const response = await axios.put(`/api/posts/${id}`, postData, config);
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${id}`, postData, config);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -91,7 +92,7 @@ export const deletePost = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      await axios.delete(`/api/posts/${id}`, config);
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${id}`, config);
       return id;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
