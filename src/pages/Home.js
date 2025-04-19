@@ -626,11 +626,8 @@ const Home = () => {
                     display="flex"
                     flexDirection="column"
                     minH="420px"
+                    p="1rem"
                     transition="transform 0.18s, box-shadow 0.18s"
-                    _hover={{
-                      transform: 'translateY(-6px) scale(1.025)',
-                      boxShadow: '2xl',
-                    }}
                   >
                     <Box className="image-container">
                       <Image
