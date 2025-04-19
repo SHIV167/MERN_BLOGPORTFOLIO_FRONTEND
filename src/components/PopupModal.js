@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Image, Box, Text, useDisclosure } from "@chakra-ui/react";
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 export default function PopupModal() {
   const [popup, setPopup] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    fetch('/api/popup')
+    fetch(`${baseUrl}/api/popup`)
       .then(async res => {
         const contentType = res.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
@@ -26,7 +27,9 @@ export default function PopupModal() {
 
   if (!popup) return null;
 
-  const imageUrl = window.innerWidth > 600 ? popup.imageDesktop : popup.imageMobile;
+  const imageUrl = window.innerWidth > 600
+    ? `${baseUrl}${popup.imageDesktop}`
+    : `${baseUrl}${popup.imageMobile}`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg" motionPreset="slideInBottom">
