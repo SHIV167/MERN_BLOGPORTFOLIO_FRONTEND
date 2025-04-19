@@ -49,7 +49,7 @@ const Contact = () => {
         }
       };
       
-      await axios.post('/api/contact', values, config);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/contact`, values, config);
       
       toast({
         title: 'Message sent!',
