@@ -54,17 +54,18 @@ function Dashboard() {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
       const token = user?.token;
+      const baseUrl = process.env.REACT_APP_BACKEND_URL;
       
       const [postsRes, projectsRes, skillsRes, videosRes] = await Promise.all([
-        fetch('/api/posts'),
-        fetch('/api/projects'),
-        fetch('/api/skills'),
-        fetch('/api/videos'),
+        fetch(`${baseUrl}/api/posts`),
+        fetch(`${baseUrl}/api/projects`),
+        fetch(`${baseUrl}/api/skills`),
+        fetch(`${baseUrl}/api/videos`),
       ]);
       // Fetch messages with auth header
       let messagesData = [];
       if (token) {
-        const messagesRes = await fetch('/api/contact', {
+        const messagesRes = await fetch(`${baseUrl}/api/contact`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
