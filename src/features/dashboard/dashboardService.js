@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL + '/api/';
-
+console.log('REACT_APP_BACKEND_URL:', process.env.REACT_APP_BACKEND_URL);
+console.log('API_URL:', API_URL);
 const dashboardService = {
   // Posts
   createPost: async (postData, token) => {
