@@ -7,14 +7,17 @@ const emojiMap = {
   wow: "😮",
 };
 
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+
 export default function FeedbackDashboard() {
   const [feedback, setFeedback] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/feedback')
+    fetch(`${baseUrl}/api/feedback`)
       .then(res => res.json())
-      .then(data => { setFeedback(data); setLoading(false); });
+      .then(data => { setFeedback(data); setLoading(false); })
+      .catch(err => { console.error('Feedback load error', err); setLoading(false); });
   }, []);
 
   // Group feedback by postId
