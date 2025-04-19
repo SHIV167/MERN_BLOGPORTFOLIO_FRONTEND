@@ -1,134 +1,233 @@
-import React, { useEffect, useState } from "react";
-import { Box, Heading, Input, Textarea, Switch, Button, Image, VStack, HStack, FormLabel, Spinner, useToast, Table, Thead, Tbody, Tr, Th, Td, IconButton } from "@chakra-ui/react";
-import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  VStack,
+  HStack,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  IconButton,
+  Select,
+} from '@chakra-ui/react';
+import ReactQuill from 'react-quill';
+import './quill.css';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
-export default function PopupManager() {
-  const [popups, setPopups] = useState([]);
-  const [current, setCurrent] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const toast = useToast();
-  const baseUrl = process.env.REACT_APP_BACKEND_URL;
+const quillModules = {
+  toolbar: {
+    container: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ],
+    handlers: {
+      image: function () {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+        input.onchange = async () => {
+          const file = input.files[0];
+          const formData = new FormData();
+          formData.append('image', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+          const data = await res.json();
+          const quill = this.quill;
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', data.url);
+        };
+      }
+    }
+  }
+};
 
-  useEffect(() => {
-    fetch(`${baseUrl}/api/popup/all`)
-      .then(res => res.json())
-      .then(data => { setPopups(data); setLoading(false); })
-      .catch(err => { console.error('Popup load error', err); setLoading(false); toast({ title: 'Error loading popups', status: 'error', duration: 3000 }); });
-  }, [saving]);
+const PostsManager = ({ posts, onChange }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    image: null,
+    category: '',
+  });
+  const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleChange = e => {
-    const { name, value, type, checked } = e.target;
-    setCurrent(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-  };
-
-  const handleImageUpload = async (e, field) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-    const res = await fetch(`${baseUrl}/api/upload`, { method: 'POST', body: formData });
-    const data = await res.json();
-    setCurrent(prev => ({ ...prev, [field]: data.url }));
-    setUploading(false);
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    const method = current._id ? 'PUT' : 'POST';
-    const url = current._id ? `${baseUrl}/api/popup/${current._id}` : `${baseUrl}/api/popup`;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      await fetch(url, {
+      const data = new FormData();
+      data.append('title', formData.title);
+      data.append('content', formData.content);
+      data.append('category', formData.category);
+      if (formData.image) data.append('image', formData.image);
+
+      const token = localStorage.getItem('token');
+      const url = editingId 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/posts/${editingId}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/posts`;
+      const method = editingId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(current)
+        body: data,
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      setSaving(false);
-      setCurrent(null);
-      toast({ title: 'Popup saved!', status: 'success', duration: 2000 });
+      if (!res.ok) throw new Error((await res.json()).message || `Failed to ${editingId ? 'update' : 'add'} post`);
+      setFormData({ title: '', content: '', image: null, category: '' });
+      setEditingId(null);
+      if (typeof onChange === 'function') onChange();
     } catch (err) {
-      console.error('Popup save error', err);
-      setSaving(false);
-      toast({ title: 'Error saving popup', status: 'error', duration: 3000 });
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`${baseUrl}/api/popup/${id}`, { method: 'DELETE' });
-      setPopups(popups.filter(p => p._id !== id));
-      setCurrent(null);
-      toast({ title: 'Popup deleted!', status: 'info', duration: 2000 });
-    } catch (err) {
-      console.error('Popup delete error', err);
-      toast({ title: 'Error deleting popup', status: 'error', duration: 3000 });
-    }
+  const handleImageChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
   };
-
-  if (loading) return <Spinner />;
 
   return (
-    <Box p={8} maxW="3xl" mx="auto">
-      <Heading mb={6}>Popup Manager</Heading>
-      <Button leftIcon={<AddIcon />} colorScheme="green" mb={4} onClick={() => setCurrent({ title: '', content: '', imageDesktop: '', imageMobile: '', enabledDesktop: false, enabledMobile: false, startDate: '', endDate: '' })}>Add New Popup</Button>
-      <Table variant="simple" mb={8}>
-        <Thead><Tr><Th>Title</Th><Th>Desktop</Th><Th>Mobile</Th><Th>Enabled</Th><Th>Schedule</Th><Th>Actions</Th></Tr></Thead>
-        <Tbody>
-          {popups.map(popup => (
-            <Tr key={popup._id}>
-              <Td>{popup.title}</Td>
-              <Td>{popup.imageDesktop && <Image src={popup.imageDesktop} maxH="40px" />}</Td>
-              <Td>{popup.imageMobile && <Image src={popup.imageMobile} maxH="40px" />}</Td>
-              <Td>
-                D: {popup.enabledDesktop ? '✅' : '❌'}<br />M: {popup.enabledMobile ? '✅' : '❌'}
-              </Td>
-              <Td>
-                {popup.startDate ? new Date(popup.startDate).toLocaleDateString() : '-'}<br/>
-                {popup.endDate ? new Date(popup.endDate).toLocaleDateString() : '-'}
-              </Td>
-              <Td>
-                <IconButton icon={<EditIcon />} size="sm" onClick={() => setCurrent(popup)} mr={2} />
-                <IconButton icon={<DeleteIcon />} size="sm" colorScheme="red" onClick={() => handleDelete(popup._id)} />
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-      {current && (
-        <Box bg="gray.50" borderRadius="md" p={6} mb={6} boxShadow="md">
-          <VStack spacing={5} align="stretch">
-            <FormLabel>Title</FormLabel>
-            <Input name="title" value={current?.title || ''} onChange={handleChange} />
-            <FormLabel>Content</FormLabel>
-            <Textarea name="content" value={current?.content || ''} onChange={handleChange} />
-            <FormLabel>Desktop Image</FormLabel>
-            <Input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'imageDesktop')} isDisabled={uploading} />
-            {current?.imageDesktop && <Image src={current.imageDesktop} maxH="120px" borderRadius="md" />}
-            <HStack>
-              <FormLabel htmlFor="enabledDesktop" mb="0">Enable on Desktop</FormLabel>
-              <Switch id="enabledDesktop" name="enabledDesktop" isChecked={current?.enabledDesktop || false} onChange={handleChange} />
-            </HStack>
-            <FormLabel>Mobile Image</FormLabel>
-            <Input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'imageMobile')} isDisabled={uploading} />
-            {current?.imageMobile && <Image src={current.imageMobile} maxH="120px" borderRadius="md" />}
-            <HStack>
-              <FormLabel htmlFor="enabledMobile" mb="0">Enable on Mobile</FormLabel>
-              <Switch id="enabledMobile" name="enabledMobile" isChecked={current?.enabledMobile || false} onChange={handleChange} />
-            </HStack>
-            <FormLabel>Start Date</FormLabel>
-            <Input type="date" name="startDate" value={current?.startDate ? current.startDate.substring(0,10) : ''} onChange={handleChange} />
-            <FormLabel>End Date</FormLabel>
-            <Input type="date" name="endDate" value={current?.endDate ? current.endDate.substring(0,10) : ''} onChange={handleChange} />
-            <HStack spacing={4} mt={4}>
-              <Button colorScheme="blue" onClick={handleSave} isLoading={saving}>Save</Button>
-              {current?._id && <Button colorScheme="red" variant="outline" onClick={() => handleDelete(current._id)}>Delete</Button>}
-              <Button variant="ghost" onClick={() => setCurrent(null)}>Cancel</Button>
-            </HStack>
-          </VStack>
+    <Box>
+      <VStack spacing={4} align="stretch">
+        <Box p={4} borderWidth="1px" borderRadius="lg">
+          {error && <Box color="red.500">{error}</Box>}
+          {loading && <Box color="gray.500">Submitting...</Box>}
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={4}>
+              <FormControl isRequired>
+                <FormLabel>Post Title</FormLabel>
+                <Input
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                />
+              </FormControl>
+              
+              <FormControl isRequired>
+                <FormLabel>Content</FormLabel>
+                <ReactQuill
+                  value={formData.content}
+                  onChange={value => setFormData({ ...formData, content: value })}
+                  style={{ minHeight: '200px', background: 'white' }}
+                  modules={quillModules}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Image</FormLabel>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </FormControl>
+
+              <FormControl isRequired>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  placeholder="Select category"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                >
+                  <option value="technology">Technology</option>
+                  <option value="programming">Programming</option>
+                  <option value="design">Design</option>
+                  <option value="other">Other</option>
+                </Select>
+              </FormControl>
+
+              <Button type="submit" colorScheme="purple">
+                {editingId ? 'Update Post' : 'Add Post'}
+              </Button>
+              {editingId && (
+                <Button
+                  onClick={() => {
+                    setFormData({ title: '', content: '', image: null, category: '' });
+                    setEditingId(null);
+                  }}
+                >
+                  Cancel Edit
+                </Button>
+              )}
+            </VStack>
+          </form>
         </Box>
-      )}
+
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Title</Th>
+              <Th>Category</Th>
+              <Th>Created At</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {posts?.map((post) => (
+              <Tr key={post._id}>
+                <Td>{post.title}</Td>
+                <Td>{post.category}</Td>
+                <Td>{new Date(post.createdAt).toLocaleDateString()}</Td>
+                <Td>
+                  <HStack spacing={2}>
+                    <IconButton
+                      icon={<EditIcon />}
+                      aria-label="Edit post"
+                      size="sm"
+                      onClick={() => {
+                        setFormData({
+                          title: post.title,
+                          content: post.content,
+                          category: post.category,
+                          image: null,
+                        });
+                        setEditingId(post._id);
+                        window.scrollTo(0, 0);
+                      }}
+                    />
+                    <IconButton
+                      icon={<DeleteIcon />}
+                      aria-label="Delete post"
+                      size="sm"
+                      colorScheme="red"
+                      onClick={async () => {
+                        if (window.confirm('Delete this post?')) {
+                          setLoading(true);
+                          setError(null);
+                          try {
+                            const token = localStorage.getItem('token');
+                            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${post._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
+                            if (!res.ok) throw new Error((await res.json()).message || 'Failed to delete post');
+                            if (typeof onChange === 'function') onChange();
+                          } catch (err) {
+                            setError(err.message);
+                          } finally {
+                            setLoading(false);
+                          }
+                        }
+                      }}
+                    />
+                  </HStack>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </VStack>
     </Box>
   );
-}
+};
+
+export default PostsManager;
