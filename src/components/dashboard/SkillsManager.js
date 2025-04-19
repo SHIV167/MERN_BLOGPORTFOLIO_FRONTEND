@@ -67,7 +67,9 @@ const SkillsManager = ({ skills, onChange }) => {
         description: formData.description?.trim() || ''
       };
       const token = localStorage.getItem('token');
-      const url = editingId ? `/api/skills/${editingId}` : '/api/skills';
+      const url = editingId 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/skills/${editingId}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/skills`;
       const method = editingId ? 'PUT' : 'POST';
       
       const res = await fetch(url, {
@@ -213,7 +215,7 @@ const SkillsManager = ({ skills, onChange }) => {
                           setError(null);
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`/api/skills/${skill._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
+                            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/skills/${skill._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
                             if (!res.ok) throw new Error((await res.json()).message || 'Failed to delete skill');
                             if (typeof onChange === 'function') onChange();
                           } catch (err) {
