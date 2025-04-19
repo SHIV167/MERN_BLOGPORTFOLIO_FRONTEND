@@ -572,11 +572,11 @@ const Home = () => {
           <Text color="whiteAlpha.800" mb={10} textAlign="center" fontSize="lg">
             Check out my latest tutorials and tech discussions
           </Text>
-          <Box px={{ base: 0, md: 10 }}>
-            <SliderSection
-              items={videos || []}
-              slidesToShow={3}
-              renderItem={(video, idx) => (
+<Box px={{ base: 0, md: 10 }}>
+  <SliderSection
+    items={videos || []}
+    slidesToShow={3}
+    renderItem={(video, idx) => (
       <Box padding="1rem">
         <VideoCard
           key={video._id}
@@ -586,11 +586,10 @@ const Home = () => {
           category={video.category}
           gradient={gradients[idx % gradients.length]}
         />
-      </Box> }}
-                />
-              )}
-            />
-          </Box>
+      </Box>
+    )}
+  />
+</Box>
           <Box textAlign="center" mt={2}>
             <Button
               as={ChakraLink}
