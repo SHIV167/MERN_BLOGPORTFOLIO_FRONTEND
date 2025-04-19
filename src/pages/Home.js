@@ -16,7 +16,6 @@ import {
   Link as ChakraLink,
   AspectRatio,
 } from "@chakra-ui/react";
-// useEffect and useState are imported below in a single line; remove this duplicate import.
 import { useDispatch, useSelector } from "react-redux";
 import {
   FaExternalLinkAlt,
@@ -65,7 +64,13 @@ const techIcons = [
   { icon: SiMongodb, color: '#47A248', label: 'MongoDB' },
 ];
 
+const gradients = [
+  'linear(to-br, #a18cd1 0%, #fbc2eb 100%)',
+  'linear(to-br, #f7971e 0%, #ffd200 100%)',
+  'linear(to-br, #43cea2 0%, #185a9d 100%)',
+];
 
+const getRandomGradient = () => gradients[Math.floor(Math.random() * gradients.length)];
 
 const CircleTechIcons = () => {
   const radius = 170; // px
@@ -133,12 +138,6 @@ const CircleTechIcons = () => {
   );
 };
 
-const gradients = [
-  'linear(to-br, #a18cd1 0%, #fbc2eb 100%)', // purple-pink
-  'linear(to-br, #f7971e 0%, #ffd200 100%)', // orange-yellow
-  'linear(to-br, #43cea2 0%, #185a9d 100%)', // teal-blue
-];
-
 const Home = () => {
   const dispatch = useDispatch();
   const { skills } = useSelector((state) => state.skills || { skills: [] });
@@ -152,6 +151,7 @@ const Home = () => {
   );
   const textColor = useColorModeValue("gray.800", "white");
   const buttonColorScheme = useColorModeValue("purple", "blue");
+  const postBorderColor = useColorModeValue('gray.200', 'gray.700');
 
   useEffect(() => {
     dispatch(getSkills());
@@ -297,9 +297,6 @@ const Home = () => {
           animate="animate"
         />
         {/* Lottie Animations (Modern) */}
-
-
-
         {/* Floating Code Symbols */}
         <MotionBox
           position="absolute"
@@ -450,7 +447,8 @@ const Home = () => {
             {Object.entries(groupedSkills).length > 0 ? Object.entries(groupedSkills).map(([category, skills]) => (
                 <Box
                   key={category}
-                  bg="white"
+                  bgGradient={getRandomGradient()}
+                  color="white"
                   borderRadius="xl"
                   boxShadow="md"
                   borderWidth="1px"
@@ -502,7 +500,8 @@ const Home = () => {
             {Array.isArray(projects) && projects.length > 0 ? projects.slice(0, 3).map((project) => (
               <Box
                 key={project._id}
-                bg="white"
+                bgGradient={getRandomGradient()}
+                color="white"
                 borderRadius="xl"
                 boxShadow="md"
                 borderWidth="1px"
@@ -561,20 +560,21 @@ const Home = () => {
             Check out my latest tutorials and tech discussions
           </Text>
           <Box px={{ base: 0, md: 10 }}>
-  <SliderSection
-    items={videos || []}
-    slidesToShow={3}
-    renderItem={(video) => (
-      <VideoCard
-        key={video._id}
-        title={video.title}
-        description={video.description}
-        videoId={video.videoId}
-        category={video.category}
-      />
-    )}
-  />
-</Box>
+            <SliderSection
+              items={videos || []}
+              slidesToShow={3}
+              renderItem={(video, idx) => (
+                <VideoCard
+                  key={video._id}
+                  title={video.title}
+                  description={video.description}
+                  videoId={video.videoId}
+                  category={video.category}
+                  gradient={gradients[idx % gradients.length]}
+                />
+              )}
+            />
+          </Box>
           <Box textAlign="center" mt={2}>
             <Button
               as={ChakraLink}
@@ -607,6 +607,8 @@ const Home = () => {
                     bgGradient={gradients[idx % gradients.length]}
                     rounded="2xl"
                     boxShadow="xl"
+                    borderWidth="1.5px"
+                    borderColor={postBorderColor}
                     overflow="hidden"
                     display="flex"
                     flexDirection="column"
@@ -673,21 +675,25 @@ const Home = () => {
   );
 };
 
-const VideoCard = ({ title, description, videoId, category }) => {
+const VideoCard = ({ title, description, videoId, category, gradient }) => {
+  const defaultBg = useColorModeValue("white", "gray.800");
+  const defaultBorderColor = useColorModeValue('gray.200', 'gray.700');
+  const descColor = useColorModeValue("gray.600", "gray.400");
   return (
     <Box
-      bg={useColorModeValue("white", "gray.800")}
+      bg={gradient ? undefined : defaultBg}
+      bgGradient={gradient}
+      color={gradient ? "white" : undefined}
       rounded="2xl"
       boxShadow="lg"
       borderWidth="1.5px"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      borderColor={defaultBorderColor}
       overflow="hidden"
-      transition="all 0.2s"
-      _hover={{
-        boxShadow: '2xl',
-        transform: 'translateY(-8px)',
-        borderColor: useColorModeValue('blue.400', 'blue.300'),
-      }}
+      transition="transform 0.18s, box-shadow 0.18s"
+      _hover={{ transform: 'translateY(-6px) scale(1.025)', boxShadow: '2xl' }}
+      minH="420px"
+      display="flex"
+      flexDirection="column"
       mb={6}
     >
       <AspectRatio ratio={16 / 9}>
@@ -697,12 +703,10 @@ const VideoCard = ({ title, description, videoId, category }) => {
           allowFullScreen
         />
       </AspectRatio>
-      <Box p={6} pt={4}>
+      <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
         <VStack align="start" spacing={3}>
           <Heading size="md">{title}</Heading>
-          <Text color={useColorModeValue("gray.600", "gray.400")}>
-            {description}
-          </Text>
+          <Text color={descColor}>{description}</Text>
           <Tag colorScheme="blue">{category}</Tag>
         </VStack>
       </Box>
