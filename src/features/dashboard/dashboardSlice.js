@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = '/api/';
+
 
 // Async thunks
 export const getPosts = createAsyncThunk('dashboard/getPosts', async (_, thunkAPI) => {
   try {
-    const response = await axios.get(API_URL + 'posts');
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts`);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
@@ -15,7 +15,7 @@ export const getPosts = createAsyncThunk('dashboard/getPosts', async (_, thunkAP
 
 export const getSkills = createAsyncThunk('dashboard/getSkills', async (_, thunkAPI) => {
   try {
-    const response = await axios.get(API_URL + 'skills');
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/skills`);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
@@ -24,7 +24,7 @@ export const getSkills = createAsyncThunk('dashboard/getSkills', async (_, thunk
 
 export const getVideos = createAsyncThunk('dashboard/getVideos', async (_, thunkAPI) => {
   try {
-    const response = await axios.get(API_URL + 'videos');
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/videos`);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
