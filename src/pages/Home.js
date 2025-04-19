@@ -151,6 +151,7 @@ const Home = () => {
   );
   const textColor = useColorModeValue("gray.800", "white");
   const buttonColorScheme = useColorModeValue("purple", "blue");
+  const postBorderColor = useColorModeValue('gray.200', 'gray.700');
 
   useEffect(() => {
     dispatch(getSkills());
@@ -605,7 +606,7 @@ const Home = () => {
                     rounded="2xl"
                     boxShadow="xl"
                     borderWidth="1.5px"
-                    borderColor={useColorModeValue('gray.200', 'gray.700')}
+                    borderColor={postBorderColor}
                     overflow="hidden"
                     display="flex"
                     flexDirection="column"
@@ -673,15 +674,18 @@ const Home = () => {
 };
 
 const VideoCard = ({ title, description, videoId, category, gradient }) => {
+  const defaultBg = useColorModeValue("white", "gray.800");
+  const defaultBorderColor = useColorModeValue('gray.200', 'gray.700');
+  const descColor = useColorModeValue("gray.600", "gray.400");
   return (
     <Box
-      bg={gradient ? undefined : useColorModeValue("white", "gray.800")}
+      bg={gradient ? undefined : defaultBg}
       bgGradient={gradient}
       color={gradient ? "white" : undefined}
       rounded="2xl"
       boxShadow="lg"
       borderWidth="1.5px"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      borderColor={defaultBorderColor}
       overflow="hidden"
       transition="transform 0.18s, box-shadow 0.18s"
       _hover={{ transform: 'translateY(-6px) scale(1.025)', boxShadow: '2xl' }}
@@ -700,7 +704,7 @@ const VideoCard = ({ title, description, videoId, category, gradient }) => {
       <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
         <VStack align="start" spacing={3}>
           <Heading size="md">{title}</Heading>
-          <Text color={useColorModeValue("gray.600", "gray.400")}>{description}</Text>
+          <Text color={descColor}>{description}</Text>
           <Tag colorScheme="blue">{category}</Tag>
         </VStack>
       </Box>
