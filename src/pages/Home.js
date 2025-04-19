@@ -577,14 +577,16 @@ const Home = () => {
               items={videos || []}
               slidesToShow={3}
               renderItem={(video, idx) => (
-                <VideoCard
-                  key={video._id}
-                  title={video.title}
-                  description={video.description}
-                  videoId={video.videoId}
-                  category={video.category}
-                  gradient={gradients[idx % gradients.length]}
-                  style={{ padding: '1rem' }}
+      <Box padding="1rem">
+        <VideoCard
+          key={video._id}
+          title={video.title}
+          description={video.description}
+          videoId={video.videoId}
+          category={video.category}
+          gradient={gradients[idx % gradients.length]}
+        />
+      </Box> }}
                 />
               )}
             />
