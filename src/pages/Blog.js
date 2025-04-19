@@ -60,7 +60,10 @@ function Blog() {
       <Box
         w="100%"
         minH="350px"
-        bgGradient="linear(to-br, #7f53ac 0%, #647dee 100%)"
+        bgImage="url('/blog-banner.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
         py={{ base: 10, md: 16 }}
         px={0}
         display="flex"
