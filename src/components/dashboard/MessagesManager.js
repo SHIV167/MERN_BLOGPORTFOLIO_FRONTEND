@@ -47,7 +47,7 @@ const MessagesManager = () => {
       
       if (!token) throw new Error('No auth token found');
       
-      const res = await axios.get('/api/contact', {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/contact`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -72,7 +72,7 @@ const MessagesManager = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
       const token = user?.token;
-      await axios.put(`/api/contact/${id}/status`, { status }, {
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/contact/${id}/status`, { status }, {
         headers: {
           'x-auth-token': token
         }
@@ -102,7 +102,7 @@ const MessagesManager = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
       const token = user?.token;
-      await axios.delete(`/api/contact/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/contact/${id}`, {
         headers: {
           'x-auth-token': token
         }
