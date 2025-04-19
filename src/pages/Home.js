@@ -453,7 +453,10 @@ const Home = () => {
             {Object.entries(groupedSkills).length > 0 ? Object.entries(groupedSkills).map(([category, skills]) => (
                 <Box
                   key={category}
-                  bg={getRandomCardGradient()}
+                  backgroundImage={getRandomCardGradient()}
+                  backgroundSize="cover"
+                  backgroundPosition="center"
+                  backgroundRepeat="no-repeat"
                   color="white"
                   borderRadius="xl"
                   boxShadow="md"
@@ -507,7 +510,10 @@ const Home = () => {
             {Array.isArray(projects) && projects.length > 0 ? projects.slice(0, 3).map((project) => (
               <Box
                 key={project._id}
-                bg={getRandomCardGradient()}
+                backgroundImage={getRandomCardGradient()}
+                backgroundSize="cover"
+                backgroundPosition="center"
+                backgroundRepeat="no-repeat"
                 color="white"
                 borderRadius="xl"
                 boxShadow="md"
