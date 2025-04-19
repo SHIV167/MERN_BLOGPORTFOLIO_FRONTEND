@@ -73,7 +73,9 @@ const PostsManager = ({ posts, onChange }) => {
       if (formData.image) data.append('image', formData.image);
 
       const token = localStorage.getItem('token');
-      const url = editingId ? `/api/posts/${editingId}` : '/api/posts';
+      const url = editingId 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/posts/${editingId}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/posts`;
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -206,7 +208,7 @@ const PostsManager = ({ posts, onChange }) => {
                           setError(null);
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`/api/posts/${post._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
+                            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${post._id}`, { method: 'DELETE', credentials: 'include', headers: token ? { Authorization: `Bearer ${token}` } : undefined });
                             if (!res.ok) throw new Error((await res.json()).message || 'Failed to delete post');
                             if (typeof onChange === 'function') onChange();
                           } catch (err) {
