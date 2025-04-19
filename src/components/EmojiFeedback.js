@@ -1,60 +1,59 @@
 import React, { useEffect, useState } from "react";
-import { HStack, IconButton, Text, Tooltip } from "@chakra-ui/react";
-import { FaRegSmile, FaRegHeart, FaRegSurprise } from "react-icons/fa";
+import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Spinner, Text } from "@chakra-ui/react";
 
-const emojiList = [
-  { type: "like", icon: FaRegSmile, label: "Like" },
-  { type: "love", icon: FaRegHeart, label: "Love" },
-  { type: "wow", icon: FaRegSurprise, label: "Wow" },
-];
+const emojiMap = {
+  like: "😊",
+  love: "❤️",
+  wow: "😮",
+};
 
-export default function EmojiFeedback({ postId }) {
-  const [counts, setCounts] = useState({ like: 0, love: 0, wow: 0 });
-  const [clicked, setClicked] = useState(null);
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+
+export default function FeedbackDashboard() {
+  const [feedback, setFeedback] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/feedback/${postId}`)
+    fetch(`${baseUrl}/api/feedback`)
       .then(res => res.json())
-      .then(data => {
-        const newCounts = { like: 0, love: 0, wow: 0 };
-        data.forEach(fb => { newCounts[fb.emoji] = fb.count; });
-        setCounts(newCounts);
-      });
-  }, [postId]);
+      .then(data => { setFeedback(data); setLoading(false); })
+      .catch(err => { console.error('Feedback load error', err); setLoading(false); });
+  }, []);
 
-  const handleClick = (type) => {
-    if (clicked) return; // Prevent multiple votes per session
-    setClicked(type);
-    fetch('/api/feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ postId, emoji: type })
-    })
-      .then(res => res.json())
-      .then(fb => {
-        setCounts(c => ({ ...c, [type]: fb.count }));
-      });
-  };
+  // Group feedback by postId
+  const grouped = Array.isArray(feedback) ? feedback.reduce((acc, fb) => {
+    if (!acc[fb.postId]) acc[fb.postId] = { like: 0, love: 0, wow: 0 };
+    acc[fb.postId][fb.emoji] = fb.count;
+    return acc;
+  }, {}) : {};
 
   return (
-    <HStack spacing={6} mt={8} justify="center">
-      {emojiList.map(({ type, icon: Icon, label }) => (
-        <Tooltip label={label} key={type} hasArrow>
-          <IconButton
-            aria-label={label}
-            icon={<Icon size={26} />}
-            variant={clicked === type ? "solid" : "outline"}
-            colorScheme={clicked === type ? "purple" : "gray"}
-            onClick={() => handleClick(type)}
-            isDisabled={!!clicked}
-          />
-        </Tooltip>
-      ))}
-      <HStack spacing={2} ml={4}>
-        <Text fontSize="md">{counts.like} 😊</Text>
-        <Text fontSize="md">{counts.love} ❤️</Text>
-        <Text fontSize="md">{counts.wow} 😮</Text>
-      </HStack>
-    </HStack>
+    <Box p={8}>
+      <Heading mb={6}>Post Emoji Feedback</Heading>
+      {loading ? <Spinner /> : (
+        Object.keys(grouped).length === 0 ? <Text>No feedback yet.</Text> : (
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Post ID</Th>
+                <Th>😊 Like</Th>
+                <Th>❤️ Love</Th>
+                <Th>😮 Wow</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {Object.entries(grouped).map(([postId, counts]) => (
+                <Tr key={postId}>
+                  <Td>{postId}</Td>
+                  <Td>{counts.like || 0}</Td>
+                  <Td>{counts.love || 0}</Td>
+                  <Td>{counts.wow || 0}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        )
+      )}
+    </Box>
   );
 }
