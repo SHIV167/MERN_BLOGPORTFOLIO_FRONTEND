@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const API_URL = "/api/projects/";
+
 
 // Get all projects
 const getProjects = async () => {
-  const response = await axios.get(API_URL);
+  const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/projects`);
   return response.data;
 };
 
 // Get featured projects
 const getFeaturedProjects = async () => {
-  const response = await axios.get(API_URL + "featured");
+  const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/projects/featured`);
   return response.data;
 };
 
@@ -22,7 +22,7 @@ const createProject = async (projectData, token) => {
     },
   };
 
-  const response = await axios.post(API_URL, projectData, config);
+  const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/projects`, projectData, config);
   return response.data;
 };
 
@@ -34,7 +34,7 @@ const updateProject = async (id, projectData, token) => {
     },
   };
 
-  const response = await axios.put(API_URL + id, projectData, config);
+  const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/projects/${id}`, projectData, config);
   return response.data;
 };
 
@@ -46,7 +46,7 @@ const deleteProject = async (id, token) => {
     },
   };
 
-  const response = await axios.delete(API_URL + id, config);
+  const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/projects/${id}`, config);
   return response.data;
 };
 
