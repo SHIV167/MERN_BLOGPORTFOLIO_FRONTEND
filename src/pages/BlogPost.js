@@ -179,7 +179,11 @@ function BlogPost() {
               >
                 <Box className="image-container" mb={3}>
                   <Image
-                    src={article.image ? `${process.env.REACT_APP_BACKEND_URL}${article.image}` : "/post-placeholder.jpg"}
+                    src={article.image
+                      ? article.image.startsWith('http')
+                        ? article.image
+                        : `${process.env.REACT_APP_BACKEND_URL}${article.image}`
+                      : "/post-placeholder.jpg"}
                     alt={article.title}
                   />
                   <Heading size="md" mb={2} color={headingColor}>
