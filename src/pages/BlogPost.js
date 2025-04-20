@@ -176,45 +176,53 @@ function BlogPost() {
       slidesToShow={3}
       renderItem={(article, idx) => (
         <Box
-          display={{ base: 'block', md: 'flex' }}
-          alignItems="stretch"
-          bg={bgColor}
-          boxShadow={cardShadow}
-          rounded="xl"
-          overflow="hidden"
-          minH="260px"
-        >
-          <Box
-            flexBasis={{ base: '100%', md: '45%' }}
-            minW={{ base: '100%', md: '230px' }}
-            maxW={{ md: '320px' }}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            bg="gray.100"
-            p={0}
-          >
-            <Image
-              src={article.image
-                ? article.image.startsWith('http')
-                  ? article.image
-                  : `${process.env.REACT_APP_BACKEND_URL}${article.image}`
-                : "/post-placeholder.jpg"}
-              alt={article.title}
-              objectFit="cover"
-              w="100%"
-              h={{ base: '180px', md: '100%' }}
-              maxH={{ base: '180px', md: '100%' }}
-            />
-          </Box>
-          <Box
-            flex="1"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            p={{ base: 4, md: 8 }}
-            bg="white"
-          >
+  display={{ base: 'block', md: 'flex' }}
+  alignItems="stretch"
+  bg={bgColor}
+  boxShadow={cardShadow}
+  rounded="xl"
+  overflow="hidden"
+  minH="220px"
+  maxH="320px"
+  mb={4}
+>
+  <Box
+    flexBasis={{ base: '100%', md: '40%' }}
+    minW={{ base: '100%', md: '220px' }}
+    maxW={{ md: '320px' }}
+    h={{ base: '180px', md: '100%' }}
+    bg="gray.200"
+    p={0}
+    overflow="hidden"
+    display="flex"
+    alignItems="stretch"
+    justifyContent="flex-start"
+  >
+    <Image
+      src={article.image
+        ? article.image.startsWith('http')
+          ? article.image
+          : `${process.env.REACT_APP_BACKEND_URL}${article.image}`
+        : "/post-placeholder.jpg"}
+      alt={article.title}
+      objectFit="cover"
+      w="100%"
+      h="100%"
+      borderRadius={0}
+      m={0}
+      p={0}
+      style={{ minHeight: '100%', minWidth: '100%' }}
+    />
+  </Box>
+  <Box
+    flex="1"
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    p={{ base: 4, md: 8 }}
+    bg="white"
+    minH="inherit"
+  >
             <Text color="gray.400" fontSize="xs" textTransform="uppercase" mb={2}>
               {article.category || 'Article'} | {new Date(article.createdAt).toLocaleDateString()} | 5 min read
             </Text>
