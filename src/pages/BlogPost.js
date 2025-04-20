@@ -69,7 +69,11 @@ function BlogPost() {
         zIndex={1}
       >
         <Image
-          src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
+          src={post.image
+            ? post.image.startsWith('http')
+              ? post.image
+              : `${process.env.REACT_APP_BACKEND_URL}${post.image}`
+            : "/post-placeholder.jpg"}
           alt="Banner"
           w="100%"
           h="100%"
@@ -118,7 +122,7 @@ function BlogPost() {
           {post.image && (
             <Box className="image-container" mb={6}>
               <Image
-                src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
+                src={post.image.startsWith('http') ? post.image : `${process.env.REACT_APP_BACKEND_URL}${post.image}`}
                 alt={post.title}
               />
             </Box>
