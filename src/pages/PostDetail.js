@@ -38,16 +38,19 @@ function PostDetail() {
         {post.image && (
           <Box
             h={"400px"}
-            bg={"gray.100"}
-            mt={-6}
-            mx={-6}
+            w={"100%"}
             mb={6}
-            pos={"relative"}>
+            position="relative"
+            borderRadius="lg"
+            overflow="hidden"
+            boxShadow="md"
+          >
             <Image
-              src={post.image}
-              layout={"fill"}
-              objectFit={"cover"}
+              src={post.image.startsWith('http') ? post.image : `${process.env.REACT_APP_BACKEND_URL}${post.image}`}
               alt={post.title}
+              objectFit="cover"
+              w="100%"
+              h="100%"
             />
           </Box>
         )}
