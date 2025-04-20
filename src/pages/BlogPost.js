@@ -13,6 +13,7 @@ import {
   Button,
   Link as ChakraLink,
 } from "@chakra-ui/react";
+import SliderSection from '../components/SliderSection';
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaFacebook, FaTwitter, FaLinkedin, FaLink } from "react-icons/fa";
 import EmojiFeedback from "../components/EmojiFeedback";
 
