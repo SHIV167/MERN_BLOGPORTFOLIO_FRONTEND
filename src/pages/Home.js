@@ -572,24 +572,22 @@ const Home = () => {
           <Text color="whiteAlpha.800" mb={10} textAlign="center" fontSize="lg">
             Check out my latest tutorials and tech discussions
           </Text>
-<Box px={{ base: 0, md: 10 }}>
-  <SliderSection
-    items={videos || []}
-    slidesToShow={3}
-    renderItem={(video, idx) => (
-      <Box padding="1rem">
-        <VideoCard
-          key={video._id}
-          title={video.title}
-          description={video.description}
-          videoId={video.videoId}
-          category={video.category}
-          gradient={gradients[idx % gradients.length]}
-        />
-      </Box>
-    )}
-  />
-</Box>
+          <Box px={{ base: 0, md: 10 }}>
+            <SliderSection
+              items={videos || []}
+              slidesToShow={3}
+              renderItem={(video, idx) => (
+                <VideoCard
+                  key={video._id}
+                  title={video.title}
+                  description={video.description}
+                  videoId={video.videoId}
+                  category={video.category}
+                  gradient={gradients[idx % gradients.length]}
+                />
+              )}
+            />
+          </Box>
           <Box textAlign="center" mt={2}>
             <Button
               as={ChakraLink}
@@ -632,11 +630,15 @@ const Home = () => {
                     _hover={{
                       transform: 'translateY(-6px) scale(1.025)',
                       boxShadow: '2xl',
-                    }}  
+                    }}
                   >
                     <Box className="image-container">
                       <Image
-                        src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
+                        src={post.image
+                          ? post.image.startsWith('http')
+                            ? post.image
+                            : `${process.env.REACT_APP_BACKEND_URL}${post.image}`
+                          : "/post-placeholder.jpg"}
                         alt={post.title}
                       />
                     </Box>
