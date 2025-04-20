@@ -13,7 +13,6 @@ import {
   Button,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import SliderSection from '../components/SliderSection';
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaFacebook, FaTwitter, FaLinkedin, FaLink } from "react-icons/fa";
 import EmojiFeedback from "../components/EmojiFeedback";
 
@@ -167,92 +166,47 @@ function BlogPost() {
 
         {/* More Articles Section */}
         <Box w="100%" mt={6}>
-  <Heading as="h3" size="lg" mb={6} color={headingColor}>
-    More Articles
-  </Heading>
-  <Box px={{ base: 0, md: 2 }}>
-    <SliderSection
-      items={moreArticles.length ? moreArticles : [post, post]}
-      slidesToShow={3}
-      renderItem={(article, idx) => (
-        <Box
-  display={{ base: 'block', md: 'flex' }}
-  alignItems="stretch"
-  bg={bgColor}
-  boxShadow={cardShadow}
-  rounded="xl"
-  overflow="hidden"
-  minH="220px"
-  maxH="320px"
-  mb={4}
->
-  <Box
-    flexBasis={{ base: '100%', md: '40%' }}
-    minW={{ base: '100%', md: '220px' }}
-    maxW={{ md: '320px' }}
-    h={{ base: '180px', md: '100%' }}
-    bg="gray.200"
-    p={0}
-    overflow="hidden"
-    display="flex"
-    alignItems="stretch"
-    justifyContent="flex-start"
-  >
-    <Image
-      src={article.image
-        ? article.image.startsWith('http')
-          ? article.image
-          : `${process.env.REACT_APP_BACKEND_URL}${article.image}`
-        : "/post-placeholder.jpg"}
-      alt={article.title}
-      objectFit="cover"
-      w="100%"
-      h="100%"
-      borderRadius={0}
-      m={0}
-      p={0}
-      style={{ minHeight: '100%', minWidth: '100%' }}
-    />
-  </Box>
-  <Box
-    flex="1"
-    display="flex"
-    flexDirection="column"
-    justifyContent="center"
-    p={{ base: 4, md: 8 }}
-    bg="white"
-    minH="inherit"
-  >
-            <Text color="gray.400" fontSize="xs" textTransform="uppercase" mb={2}>
-              {article.category || 'Article'} | {new Date(article.createdAt).toLocaleDateString()} | 5 min read
-            </Text>
-            <Heading fontSize={{ base: "lg", md: "2xl" }} mb={2} color={headingColor} noOfLines={2}>
-              {article.title}
-            </Heading>
-            <Text color="gray.600" fontSize={{ base: "sm", md: "md" }} mb={4} noOfLines={2}>
-              {article.excerpt ? stripHtml(article.excerpt) : (article.content ? stripHtml(article.content).substring(0, 110) + '...' : '')}
-            </Text>
-            <Box>
-              <Button
-                as={ChakraLink}
-                href={`/blog/${article.slug}`}
-                colorScheme="gray"
-                variant="solid"
-                px={8}
-                py={2}
-                fontWeight="bold"
-                borderRadius="md"
-                _hover={{ bg: 'gray.200' }}
+          <Heading as="h3" size="lg" mb={6} color={headingColor}>
+            More Articles
+          </Heading>
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+            {(moreArticles.length ? moreArticles : [post, post]).map((article, idx) => (
+              <Box
+                key={idx}
+                bg={bgColor}
+                boxShadow={cardShadow}
+                rounded="xl"
+                p={5}
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
               >
-                Read Article
-              </Button>
-            </Box>
-          </Box>
+                <Box className="image-container" mb={3}>
+                  <Image
+                    src={article.image
+                      ? article.image.startsWith('http')
+                        ? article.image
+                        : `${process.env.REACT_APP_BACKEND_URL}${article.image}`
+                      : "/post-placeholder.jpg"}
+                    alt={article.title}
+                  />
+                  <Heading size="md" mb={2} color={headingColor}>
+                    {article.title}
+                  </Heading>
+                  <Text color="gray.600" mb={2}>
+                    {article.excerpt ? stripHtml(article.excerpt).substring(0, 80) : (article.content ? stripHtml(article.content).substring(0, 80) + '...' : '')}
+                  </Text>
+                </Box>
+                <HStack color="gray.500" fontSize="sm">
+                  <FaCalendarAlt />
+                  <Text>{new Date(article.createdAt).toLocaleDateString()}</Text>
+                  <FaClock />
+                  <Text>5 min read</Text>
+                </HStack>
+              </Box>
+            ))}
+          </SimpleGrid>
         </Box>
-      )}
-    />
-  </Box>
-</Box>
       </Container>
     </Box>
   );
