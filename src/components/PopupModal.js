@@ -28,8 +28,16 @@ export default function PopupModal() {
   if (!popup) return null;
 
   const imageUrl = window.innerWidth > 600
-    ? `${baseUrl}${popup.imageDesktop}`
-    : `${baseUrl}${popup.imageMobile}`;
+    ? (popup.imageDesktop
+        ? popup.imageDesktop.startsWith('http')
+          ? popup.imageDesktop
+          : `${baseUrl}${popup.imageDesktop}`
+        : null)
+    : (popup.imageMobile
+        ? popup.imageMobile.startsWith('http')
+          ? popup.imageMobile
+          : `${baseUrl}${popup.imageMobile}`
+        : null);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg" motionPreset="slideInBottom">
