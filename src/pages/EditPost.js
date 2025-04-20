@@ -191,13 +191,10 @@ function EditPost() {
           <FormControl>
             <FormLabel>Image</FormLabel>
             {formData.image && typeof formData.image === "string" && (
-              <Box mb={2}>
-                <img
-                  src={
-                    formData.image.startsWith("http")
-                      ? formData.image
-                      : `http://localhost:5000${formData.image}`
-                  }
+              <Box mb={4}>
+                <Text mb={1}>Current Image:</Text>
+                <Image
+                  src={formData.image.startsWith('http') ? formData.image : `${process.env.REACT_APP_BACKEND_URL}${formData.image}`}
                   alt="Current post"
                   style={{ maxHeight: "200px" }}
                 />
