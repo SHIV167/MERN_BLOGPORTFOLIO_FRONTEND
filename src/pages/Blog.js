@@ -110,8 +110,16 @@ function Blog() {
             >
               <Box className="image-container">
                 <Image
-                  src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
+                  src={post.image
+                    ? post.image.startsWith('http')
+                      ? post.image
+                      : `${process.env.REACT_APP_BACKEND_URL}${post.image}`
+                    : "/post-placeholder.jpg"}
                   alt={post.title}
+                  objectFit="cover"
+                  w="100%"
+                  h="220px"
+                  borderRadius="lg"
                 />
               </Box>
               <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
