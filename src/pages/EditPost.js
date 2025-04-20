@@ -11,6 +11,8 @@ import {
   Button,
   VStack,
   useToast,
+  Text,
+  Image,
 } from "@chakra-ui/react";
 import ReactQuill from "react-quill";
 import '../components/dashboard/quill.css';
