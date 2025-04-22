@@ -30,6 +30,19 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   }
 });
 
+// Google OAuth login
+export const googleLogin = createAsyncThunk(
+  'auth/googleLogin',
+  async (token, thunkAPI) => {
+    try {
+      return await authService.googleLogin(token);
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const logout = createAsyncThunk('auth/logout', async () => {
   await authService.logout();
 });
@@ -70,6 +83,21 @@ export const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.user = null;
+      })
+      // Google OAuth
+      .addCase(googleLogin.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
