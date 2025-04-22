@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../features/auth/authSlice";
+import { register, googleLogin } from "../features/auth/authSlice";
 import {
   Box,
   FormControl,
@@ -19,6 +19,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -34,6 +35,20 @@ function Register() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useToast();
+
+  // Google OAuth handlers
+  const handleGoogleSuccess = (credentialResponse) => {
+    dispatch(googleLogin(credentialResponse.credential));
+  };
+  const handleGoogleError = () => {
+    toast({
+      title: "Google Sign‑up Failed",
+      description: "Unable to authenticate with Google",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -188,6 +203,10 @@ function Register() {
                   isLoading={isLoading}>
                   Sign up
                 </Button>
+              </Stack>
+              {/* Google Sign‑Up */}
+              <Stack spacing={6} align="center" mt={4}>
+                <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
               </Stack>
               <Stack pt={6}>
                 <Text align={"center"}>
