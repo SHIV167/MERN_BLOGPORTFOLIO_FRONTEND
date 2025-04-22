@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { login, reset } from "../features/auth/authSlice";
+import { login, reset, googleLogin } from "../features/auth/authSlice";
 import {
   Box,
   Button,
@@ -16,6 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -68,6 +69,20 @@ function Login() {
     dispatch(login(userData));
   };
 
+  // Google OAuth handlers
+  const handleGoogleSuccess = (credentialResponse) => {
+    dispatch(googleLogin(credentialResponse.credential));
+  };
+  const handleGoogleError = () => {
+    toast({
+      title: "Google Sign-in Failed",
+      description: "Unable to authenticate with Google",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Box
       minH={"100vh"}
@@ -117,6 +132,9 @@ function Login() {
                   isLoading={isLoading}>
                   Sign in
                 </Button>
+              </Stack>
+              <Stack spacing={6} align="center" mt={4}>
+                <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
               </Stack>
               <Stack pt={6}>
                 <Text align={"center"}>
