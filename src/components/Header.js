@@ -17,6 +17,7 @@ import {
   MenuItem,
   Container,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import {
   MoonIcon,
   SunIcon,
@@ -40,6 +41,7 @@ export default function Header() {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     fetch("/api/header-menu")
@@ -66,6 +68,13 @@ export default function Header() {
   const onLogout = () => {
     dispatch(logout());
     dispatch(reset());
+    toast({
+      title: "Logged out",
+      description: "You have been logged out",
+      status: "info",
+      duration: 5000,
+      isClosable: true,
+    });
     navigate("/");
   };
 
