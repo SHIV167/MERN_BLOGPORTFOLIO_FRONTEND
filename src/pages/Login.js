@@ -44,7 +44,16 @@ function Login() {
       });
     }
 
-    if (isSuccess || user) {
+    if (isSuccess) {
+      toast({
+        title: "Logged in",
+        description: `Welcome ${user.name}`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate("/");
+    } else if (user) {
       navigate("/");
     }
 
