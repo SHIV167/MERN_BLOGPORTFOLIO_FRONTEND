@@ -40,6 +40,7 @@ import Typewriter from "typewriter-effect";
 import SliderSection from '../components/SliderSection';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Spinner, Center } from "@chakra-ui/react";
 
 const MotionBox = motion(Box);
 const MotionSvg = motion.svg;
@@ -146,10 +147,10 @@ const CircleTechIcons = () => {
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { skills } = useSelector((state) => state.skills || { skills: [] });
-  const { projects } = useSelector((state) => state.projects || { projects: [] });
-  const { videos } = useSelector((state) => state.youtube || { videos: [] });
-  const { posts = [] } = useSelector((state) => state.posts || { posts: [] });
+  const { skills, isLoading: skillsLoading } = useSelector((state) => state.skills || { skills: [], isLoading: false });
+  const { projects, isLoading: projectsLoading } = useSelector((state) => state.projects || { projects: [], isLoading: false });
+  const { videos, isLoading: videosLoading } = useSelector((state) => state.youtube || { videos: [], isLoading: false });
+  const { posts, isLoading: postsLoading } = useSelector((state) => state.posts || { posts: [], isLoading: false });
 
   const bgGradient = useColorModeValue(
     "linear(to-r, blue.100, purple.100)",
@@ -449,8 +450,11 @@ const Home = () => {
           <Text color="gray.500" mb={10} textAlign="center" fontSize="lg">
             My technical expertise and proficiency
           </Text>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {Object.entries(groupedSkills).length > 0 ? Object.entries(groupedSkills).map(([category, skills]) => (
+          {skillsLoading ? (
+            <Center py={10}><Spinner size="xl" /></Center>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+              {Object.entries(groupedSkills).length > 0 ? Object.entries(groupedSkills).map(([category, skills]) => (
                 <Box
                   key={category}
                   backgroundImage={getRandomCardGradient()}
@@ -493,7 +497,8 @@ const Home = () => {
                   <Text color="gray.500">No skills found.</Text>
                 </Box>
               )}
-          </SimpleGrid>
+            </SimpleGrid>
+          )}
         </Container>
       </Box>
 
@@ -506,60 +511,64 @@ const Home = () => {
           <Text color="gray.500" mb={10} textAlign="center" fontSize="lg">
             A selection of my recent work and professional collaborations
           </Text>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {Array.isArray(projects) && projects.length > 0 ? projects.slice(0, 3).map((project) => (
-              <Box
-                key={project._id}
-                backgroundImage={getRandomCardGradient()}
-                backgroundSize="cover"
-                backgroundPosition="center"
-                backgroundRepeat="no-repeat"
-                color="white"
-                borderRadius="xl"
-                boxShadow="md"
-                borderWidth="1px"
-                borderColor="transparent"
-                overflow="hidden"
-                display="flex"
-                flexDirection="column"
-                minH="360px"
-              >
-                <Image
-                  src={project.image || "/project-placeholder.jpg"}
-                  alt={project.title}
-                  h={"180px"}
-                  w="100%"
-                  objectFit="cover"
-                />
-                <Box p={6} flex={1} display="flex" flexDirection="column" justifyContent="space-between">
-                  <Box>
-                    <Heading fontSize="lg" color="#231942" fontWeight={700} mb={1}>
-                      {project.title}
-                    </Heading>
-                    <Text color="gray.600" fontSize="md" mb={3}>{project.description}</Text>
-                    <Stack direction="row" spacing={2} mb={3}>
-                      {(project.tags || []).map((tag) => (
-                        <Tag key={tag} colorScheme="gray" fontWeight="bold">{tag}</Tag>
-                      ))}
-                    </Stack>
+          {projectsLoading ? (
+            <Center py={10}><Spinner size="xl" /></Center>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+              {Array.isArray(projects) && projects.length > 0 ? projects.slice(0, 3).map((project) => (
+                <Box
+                  key={project._id}
+                  backgroundImage={getRandomCardGradient()}
+                  backgroundSize="cover"
+                  backgroundPosition="center"
+                  backgroundRepeat="no-repeat"
+                  color="white"
+                  borderRadius="xl"
+                  boxShadow="md"
+                  borderWidth="1px"
+                  borderColor="transparent"
+                  overflow="hidden"
+                  display="flex"
+                  flexDirection="column"
+                  minH="360px"
+                >
+                  <Image
+                    src={project.image || "/project-placeholder.jpg"}
+                    alt={project.title}
+                    h={"180px"}
+                    w="100%"
+                    objectFit="cover"
+                  />
+                  <Box p={6} flex={1} display="flex" flexDirection="column" justifyContent="space-between">
+                    <Box>
+                      <Heading fontSize="lg" color="#231942" fontWeight={700} mb={1}>
+                        {project.title}
+                      </Heading>
+                      <Text color="gray.600" fontSize="md" mb={3}>{project.description}</Text>
+                      <Stack direction="row" spacing={2} mb={3}>
+                        {(project.tags || []).map((tag) => (
+                          <Tag key={tag} colorScheme="gray" fontWeight="bold">{tag}</Tag>
+                        ))}
+                      </Stack>
+                    </Box>
+                    <Button
+                      as={Link}
+                      to={project.demoLink || "#"}
+                      colorScheme="gray"
+                      variant="outline"
+                      leftIcon={<FaExternalLinkAlt />}
+                      fontWeight={700}
+                      size="sm"
+                      mt={2}
+                      alignSelf="flex-start"
+                    >
+                      View Project
+                    </Button>
                   </Box>
-                  <Button
-                    as={Link}
-                    to={project.demoLink || "#"}
-                    colorScheme="gray"
-                    variant="outline"
-                    leftIcon={<FaExternalLinkAlt />}
-                    fontWeight={700}
-                    size="sm"
-                    mt={2}
-                    alignSelf="flex-start"
-                  >
-                    View Project
-                  </Button>
                 </Box>
-              </Box>
-            )) : null}
-          </SimpleGrid>
+              )) : null}
+            </SimpleGrid>
+          )}
         </Container>
       </Box>
 
@@ -572,22 +581,26 @@ const Home = () => {
           <Text color="whiteAlpha.800" mb={10} textAlign="center" fontSize="lg">
             Check out my latest tutorials and tech discussions
           </Text>
-          <Box px={{ base: 0, md: 10 }}>
-            <SliderSection
-              items={videos || []}
-              slidesToShow={3}
-              renderItem={(video, idx) => (
-                <VideoCard
-                  key={video._id}
-                  title={video.title}
-                  description={video.description}
-                  videoId={video.videoId}
-                  category={video.category}
-                  gradient={gradients[idx % gradients.length]}
-                />
-              )}
-            />
-          </Box>
+          {videosLoading ? (
+            <Center py={10}><Spinner size="xl" /></Center>
+          ) : (
+            <Box px={{ base: 0, md: 10 }}>
+              <SliderSection
+                items={videos || []}
+                slidesToShow={3}
+                renderItem={(video, idx) => (
+                  <VideoCard
+                    key={video._id}
+                    title={video.title}
+                    description={video.description}
+                    videoId={video.videoId}
+                    category={video.category}
+                    gradient={gradients[idx % gradients.length]}
+                  />
+                )}
+              />
+            </Box>
+          )}
           <Box textAlign="center" mt={2}>
             <Button
               as={ChakraLink}
@@ -613,81 +626,83 @@ const Home = () => {
           <Heading as="h2" size="xl" mb={10} textAlign="center" color="#231942" fontWeight={900} letterSpacing={-1}>
             BLOGS
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {Array.isArray(posts) && posts.length > 0 ? posts.slice(0, 3).map((post, idx) => (
-                  <Box
-                    key={post._id}
-                    bgGradient={gradients[idx % gradients.length]}
-                    rounded="2xl"
-                    boxShadow="xl"
-                    borderWidth="1.5px"
-                    borderColor={postBorderColor}
-                    overflow="hidden"
-                    display="flex"
-                    flexDirection="column"
-                    minH="420px"
-                    transition="transform 0.18s, box-shadow 0.18s"
-                    _hover={{
-                      transform: 'translateY(-6px) scale(1.025)',
-                      boxShadow: '2xl',
-                    }}
-                  >
-                    <Box className="image-container">
-                      <Image
-                        src={post.image
-                          ? post.image.startsWith('http')
-                            ? post.image
-                            : `${process.env.REACT_APP_BACKEND_URL}${post.image}`
-                          : "/post-placeholder.jpg"}
-                        alt={post.title}
-                      />
+          {postsLoading ? (
+            <Center py={10}><Spinner size="xl" /></Center>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+              {Array.isArray(posts) && posts.length > 0 ? posts.slice(0, 3).map((post, idx) => (
+                <Box
+                  key={post._id}
+                  bgGradient={gradients[idx % gradients.length]}
+                  rounded="2xl"
+                  boxShadow="xl"
+                  borderWidth="1.5px"
+                  borderColor={postBorderColor}
+                  overflow="hidden"
+                  display="flex"
+                  flexDirection="column"
+                  minH="420px"
+                  transition="transform 0.18s, box-shadow 0.18s"
+                  _hover={{
+                    transform: 'translateY(-6px) scale(1.025)',
+                    boxShadow: '2xl',
+                  }}
+                >
+                  <Box className="image-container">
+                    <Image
+                      src={post.image
+                        ? post.image.startsWith('http')
+                          ? post.image
+                          : `${process.env.REACT_APP_BACKEND_URL}${post.image}`
+                        : "/post-placeholder.jpg"}
+                      alt={post.title}
+                    />
+                  </Box>
+                  <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
+                    <Box>
+                      <Heading fontSize="xl" color="white" fontWeight={700} mb={2}>
+                        {post.title}
+                      </Heading>
+                      <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
+                        {post.excerpt ? stripHtml(post.excerpt).substring(0, 90) : (post.content ? stripHtml(post.content).substring(0, 90) + '...' : '')}
+                      </Text>
                     </Box>
-                    <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
-                      <Box>
-                        <Heading fontSize="xl" color="white" fontWeight={700} mb={2}>
-                          {post.title}
-                        </Heading>
-                        <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
-                          {post.excerpt ? stripHtml(post.excerpt).substring(0, 90) : (post.content ? stripHtml(post.content).substring(0, 90) + '...' : '')}
-                        </Text>
-                      </Box>
-                      <Box mt={2}>
-                        <HStack spacing={6} color="whiteAlpha.800" fontSize="sm" mb={3}>
-                          <HStack spacing={2}>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-2-2"/></svg>
-                            <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
-                          </HStack>
-                          <HStack spacing={2}>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-                            <Text>5 min read</Text>
-                          </HStack>
+                    <Box mt={2}>
+                      <HStack spacing={6} color="whiteAlpha.800" fontSize="sm" mb={3}>
+                        <HStack spacing={2}>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-2-2"/></svg>
+                          <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
                         </HStack>
-                        <Button
-                          as={Link}
-                          to={`/blog/${post.slug}`}
-                          colorScheme="whiteAlpha"
-                          variant="outline"
-                          borderRadius="md"
-                          fontWeight={700}
-                          px={6}
-                          py={2}
-                          _hover={{ bg: 'whiteAlpha.200', borderColor: 'whiteAlpha.800' }}
-                        >
-                          Read More
-                        </Button>
-                      </Box>
+                        <HStack spacing={2}>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+                          <Text>5 min read</Text>
+                        </HStack>
+                      </HStack>
+                      <Button
+                        as={Link}
+                        to={`/blog/${post.slug}`}
+                        colorScheme="whiteAlpha"
+                        variant="outline"
+                        borderRadius="md"
+                        fontWeight={700}
+                        px={6}
+                        py={2}
+                        _hover={{ bg: 'whiteAlpha.200', borderColor: 'whiteAlpha.800' }}
+                      >
+                        Read More
+                      </Button>
                     </Box>
                   </Box>
-                )) : (
-                  <Box py={10} textAlign="center">
-                    <Text color="whiteAlpha.900">No blog posts found.</Text>
-                  </Box>
-                )}
-          </SimpleGrid>
+                </Box>
+              )) : (
+                <Box py={10} textAlign="center">
+                  <Text color="whiteAlpha.900">No blog posts found.</Text>
+                </Box>
+              )}
+            </SimpleGrid>
+          )}
         </Container>
       </Box>
-
-
     </Box>
   );
 };
