@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Blog from "./pages/Blog";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile"; // Added import statement for Profile
 import Dashboard from "./pages/Dashboard";
 import BlogPost from "./pages/BlogPost";
 import EditPost from "./pages/EditPost";
@@ -41,7 +42,7 @@ function App() {
 
             <Route path="/skills/create" element={<AdminRoute><CreateSkill /></AdminRoute>} />
             <Route path="/skills/edit/:id" element={<AdminRoute><EditSkill /></AdminRoute>} />
-            {/* <Route path="/skills/delete/:id" element={<AdminRoute><DeleteSkill /></AdminRoute>} /> */}
+            {/* <Route path="/skills/delete/:id" element={<AdminRoute><DeleteSkill /></AdminRoute>} */}
 
             <Route path="/projects/create" element={<AdminRoute><CreateProject /></AdminRoute>} />
             <Route path="/projects/edit/:id" element={<AdminRoute><EditProject /></AdminRoute>} />
@@ -59,6 +60,7 @@ function App() {
             <Route path="/blog/:slug" element={<><Header /><Box flex="1"><BlogPost /></Box><Footer /></>} />
             <Route path="/login" element={<><Header /><Box flex="1"><Login /></Box><Footer /></>} />
             <Route path="/register" element={<><Header /><Box flex="1"><Register /></Box><Footer /></>} />
+            <Route path="/profile" element={<><Header /><Box flex="1"><Profile /></Box><Footer /></>} />
             <Route path="/contact" element={<><Header /><Box flex="1"><Contact /></Box><Footer /></>} />
             <Route path="*" element={<><Header /><Box flex="1"><NotFound /></Box><Footer /></>} />
           </Routes>
