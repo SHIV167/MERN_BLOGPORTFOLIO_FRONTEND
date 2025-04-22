@@ -28,6 +28,9 @@ import {
   FaUser,
   FaLinkedinIn,
   FaYoutube,
+  FaUserCircle,
+  FaTachometerAlt,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -137,8 +140,11 @@ export default function Header() {
                 <Menu>
                   <MenuButton as={Button}>{`Hi, ${user.name}`}</MenuButton>
                   <MenuList>
-                    {user.isAdmin && (<MenuItem onClick={() => navigate("/dashboard")}>Dashboard</MenuItem>)}
-                    <MenuItem onClick={onLogout}>Logout</MenuItem>
+                    <MenuItem icon={<FaUserCircle />} onClick={() => navigate("/profile")}>Profile</MenuItem>
+                    {user.isAdmin && (
+                      <MenuItem icon={<FaTachometerAlt />} onClick={() => navigate("/dashboard")}>Dashboard</MenuItem>
+                    )}
+                    <MenuItem icon={<FaSignOutAlt />} onClick={onLogout}>Logout</MenuItem>
                   </MenuList>
                 </Menu>
               ) : (
