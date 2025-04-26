@@ -7,11 +7,14 @@ import {
   Container,
   Heading,
   Text,
-  Image,
   Stack,
   Tag,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage } from "@cloudinary/react";
+
+const cld = new Cloudinary({ cloud: { cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME } });
 
 function PostDetail() {
   const { slug } = useParams();
@@ -32,6 +35,9 @@ function PostDetail() {
     );
   }
 
+  const imgSrc = post.image.startsWith('http') ? post.image : `${process.env.REACT_APP_BACKEND_URL}${post.image}`;
+  const cldImg = cld.fetch(imgSrc).format('auto').quality('auto');
+
   return (
     <Container maxW={"7xl"} py={12}>
       <Box>
@@ -45,12 +51,10 @@ function PostDetail() {
             overflow="hidden"
             boxShadow="md"
           >
-            <Image
-              src={post.image.startsWith('http') ? post.image : `${process.env.REACT_APP_BACKEND_URL}${post.image}`}
+            <AdvancedImage
+              cldImg={cldImg}
               alt={post.title}
-              objectFit="cover"
-              w="100%"
-              h="100%"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </Box>
         )}
