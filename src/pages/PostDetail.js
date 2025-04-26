@@ -10,11 +10,10 @@ import {
   Stack,
   Tag,
   useColorModeValue,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
-import { Cloudinary } from "@cloudinary/url-gen";
-import { AdvancedImage } from "@cloudinary/react";
-
-const cld = new Cloudinary({ cloud: { cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME } });
+import CloudinaryImage from "../components/CloudinaryImage";
 
 function PostDetail() {
   const { slug } = useParams();
@@ -30,16 +29,14 @@ function PostDetail() {
   if (isLoading || !post) {
     return (
       <Container maxW={"7xl"} py={12}>
-        <Text>Loading...</Text>
+        <Center>
+          <Spinner size="xl" />
+        </Center>
       </Container>
     );
   }
 
   const imgSrc = post.image.startsWith('http') ? post.image : `${process.env.REACT_APP_BACKEND_URL}${post.image}`;
-  // derive public ID with folder for Cloudinary
-  const filename = imgSrc.split('/').pop().split('.')[0];
-  const publicId = `mern_blog_uploads/${filename}`;
-  const cldImg = cld.image(publicId).format('avif');
 
   return (
     <Container maxW={"7xl"} py={12}>
@@ -54,8 +51,8 @@ function PostDetail() {
             overflow="hidden"
             boxShadow="md"
           >
-            <AdvancedImage
-              cldImg={cldImg}
+            <CloudinaryImage
+              src={imgSrc}
               alt={post.title}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
