@@ -93,16 +93,6 @@ const AdminDashboardLayout = ({ children, user }) => {
               </Box>
             )}
           </HStack>
-          <HStack mt={4} w={collapsed ? 10 : 'full'} justifyContent={collapsed ? 'center' : 'flex-start'}>
-            <Menu>
-              <MenuButton as={Button} leftIcon={<Avatar size="sm" name={user?.name} />} colorScheme="whiteAlpha" variant="outline" size="sm" borderRadius="md">
-                {!collapsed && user?.name}
-              </MenuButton>
-              <MenuList>
-                <MenuItem icon={<FaThLarge />} onClick={() => window.location.href = '/dashboard'}>Dashboard</MenuItem>
-              </MenuList>
-            </Menu>
-          </HStack>
           <Button leftIcon={<FaSignOutAlt />} mt={2} w={collapsed ? 10 : 'full'} colorScheme="red" variant="solid" size="sm" borderRadius="md" onClick={() => {
             localStorage.removeItem('user');
             window.location.href = '/login';
