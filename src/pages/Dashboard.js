@@ -25,6 +25,7 @@ import FooterManager from '../components/dashboard/FooterManager';
 import FeedbackDashboard from '../components/dashboard/FeedbackDashboard';
 import PopupManager from '../components/dashboard/PopupManager';
 import NewsletterPopupManager from '../components/dashboard/NewsletterPopupManager';
+import NewsletterSubscribersManager from '../components/dashboard/NewsletterSubscribersManager';
 
 import { Link, Routes, Route } from 'react-router-dom';
 
@@ -207,6 +208,7 @@ setUnreadCount(Array.isArray(messagesData) ? messagesData.filter(msg => msg.stat
         <Route path="messages" element={<MessagesManager messages={messages} onChange={fetchAll} />} />
         <Route path="feedback" element={<FeedbackDashboard />} />
         <Route path="newsletter" element={<NewsletterPopupManager />} />
+        <Route path="newsletter/subscribers" element={<NewsletterSubscribersManager />} />
         <Route path="popup" element={<PopupManager />} />
       </Routes>
     </AdminDashboardLayout>
@@ -214,4 +216,3 @@ setUnreadCount(Array.isArray(messagesData) ? messagesData.filter(msg => msg.stat
 }
 
 export default Dashboard;
- 
