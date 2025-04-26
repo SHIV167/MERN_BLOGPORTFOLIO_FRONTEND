@@ -49,7 +49,7 @@ export default function NewsletterPopupManager() {
     const fd = new FormData();
     fd.append('image', file);
     try {
-      const res = await fetch(`${baseUrl}/api/newsletter/upload`, { method: 'POST', body: fd });
+      const res = await fetch(`${baseUrl}/api/upload`, { method: 'POST', body: fd });
       const data = await res.json();
       setCurrent(prev => ({ ...prev, backgroundBanner: data.url }));
     } catch (err) {
