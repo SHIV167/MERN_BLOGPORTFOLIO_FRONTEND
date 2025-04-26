@@ -16,7 +16,7 @@ import {
   MenuItem
 } from '@chakra-ui/react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
-import { FaProjectDiagram, FaRegNewspaper, FaUserCog, FaEnvelopeOpenText, FaYoutube, FaSignOutAlt, FaThLarge, FaBars, FaRegSmile, FaRegWindowRestore, FaMailBulk } from 'react-icons/fa';
+import { FaProjectDiagram, FaRegNewspaper, FaUserCog, FaEnvelopeOpenText, FaYoutube, FaSignOutAlt, FaThLarge, FaBars, FaRegSmile, FaRegWindowRestore, FaMailBulk, FaUsers } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
 const navLinks = [
@@ -25,6 +25,7 @@ const navLinks = [
   { name: 'Footer Manager', icon: FaRegSmile, to: '/dashboard/footer' },
   { name: 'Popup Manager', icon: FaRegWindowRestore, to: '/dashboard/popup' },
   { name: 'Newsletter Popup', icon: FaMailBulk, to: '/dashboard/newsletter' },
+  { name: 'Subscribers', icon: FaUsers, to: '/dashboard/newsletter/subscribers' },
   { name: 'Feedback', icon: FaRegSmile, to: '/dashboard/feedback' },
   { name: 'Projects', icon: FaProjectDiagram, to: '/dashboard/projects' },
   { name: 'Blog Posts', icon: FaRegNewspaper, to: '/dashboard/posts' },
