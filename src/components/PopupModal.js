@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Image, Box, Text, useDisclosure } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Image, Box, Text, useDisclosure, Input, Button, VStack, useToast } from "@chakra-ui/react";
 const baseUrl = process.env.REACT_APP_BACKEND_URL || 'https://mern-blogportfolio-backend-server.onrender.com';
 
 export default function PopupModal() {
   const [popup, setPopup] = useState(null);
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -43,6 +47,33 @@ export default function PopupModal() {
           {imageUrl && <Image src={imageUrl} w="100%" h="auto" objectFit="cover" alt="Newsletter Popup" />}
           <Box p={6} textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" mb={2}>{popup.title}</Text>
+            {!subscribed ? (
+              <VStack spacing={4} mt={4}>
+                <Input placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} />
+                <Button colorScheme="blue" onClick={async () => {
+                    setSubscribing(true);
+                    try {
+                      const res = await fetch(`${baseUrl}/api/newsletter/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+                      const data = await res.json();
+                      if (res.ok) {
+                        setSubscribed(true);
+                        toast({ title: 'Subscribed!', status: 'success', duration: 3000 });
+                      } else {
+                        toast({ title: data.message || 'Subscription failed', status: 'error', duration: 3000 });
+                      }
+                    } catch (err) {
+                      console.error(err);
+                      toast({ title: 'Subscription error', status: 'error', duration: 3000 });
+                    } finally {
+                      setSubscribing(false);
+                    }
+                  }} isLoading={subscribing}>
+                  Subscribe
+                </Button>
+              </VStack>
+            ) : (
+              <Text mt={4}>Thank you for subscribing!</Text>
+            )}
           </Box>
         </ModalBody>
       </ModalContent>
