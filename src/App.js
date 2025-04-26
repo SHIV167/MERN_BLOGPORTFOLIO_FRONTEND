@@ -25,7 +25,6 @@ import React from 'react';
 import PopupModal from './components/PopupModal';
 import NewsletterPopupManager from './components/dashboard/NewsletterPopupManager';
 
-
 function App() {
   // PopupModal is rendered globally
   return (
@@ -37,7 +36,7 @@ function App() {
           <Routes>
             {/* Admin routes - NO Header/Footer */}
             <Route path="/dashboard/*" element={<AdminRoute><Dashboard /></AdminRoute>} />
-             <Route path="/dashboard/newsletter" element={<AdminRoute><NewsletterPopupManager /></AdminRoute>} />
+            <Route path="/dashboard/newsletter" element={<AdminRoute><NewsletterPopupManager /></AdminRoute>} />
             <Route path="/posts/create" element={<AdminRoute><CreatePost /></AdminRoute>} />
             <Route path="/posts/edit/:id" element={<AdminRoute><EditPost /></AdminRoute>} />
             {/* Optional: Delete post route (if you want a dedicated page) */}
