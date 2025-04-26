@@ -28,7 +28,7 @@ export default function NewsletterPopupManager() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const toast = useToast();
-  const baseUrl = process.env.REACT_APP_BACKEND_URL;
+  const baseUrl = process.env.REACT_APP_BACKEND_URL || 'https://mern-blogportfolio-backend-server.onrender.com';
 
   useEffect(() => {
     fetch(`${baseUrl}/api/newsletter/all`)
