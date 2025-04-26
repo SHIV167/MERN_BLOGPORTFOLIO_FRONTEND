@@ -36,7 +36,10 @@ function PostDetail() {
   }
 
   const imgSrc = post.image.startsWith('http') ? post.image : `${process.env.REACT_APP_BACKEND_URL}${post.image}`;
-  const cldImg = cld.fetch(imgSrc).format('auto').quality('auto');
+  // derive public ID with folder for Cloudinary
+  const filename = imgSrc.split('/').pop().split('.')[0];
+  const publicId = `mern_blog_uploads/${filename}`;
+  const cldImg = cld.image(publicId).format('avif');
 
   return (
     <Container maxW={"7xl"} py={12}>
