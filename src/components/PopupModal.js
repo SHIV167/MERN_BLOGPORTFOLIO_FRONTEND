@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Image, Box, Text, useDisclosure, Input, Button, VStack, useToast } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Box, Text, useDisclosure, Input, Button, VStack, useToast } from "@chakra-ui/react";
+import CloudinaryImage from "../components/CloudinaryImage";
 const baseUrl = process.env.REACT_APP_BACKEND_URL || 'https://mern-blogportfolio-backend-server.onrender.com';
 
 export default function PopupModal() {
@@ -44,7 +45,7 @@ export default function PopupModal() {
       <ModalContent borderRadius="2xl" overflow="hidden" boxShadow="2xl">
         <ModalCloseButton />
         <ModalBody p={0}>
-          {imageUrl && <Image src={imageUrl} w="100%" h="auto" objectFit="cover" alt="Newsletter Popup" />}
+          {imageUrl && <CloudinaryImage src={imageUrl} alt="Newsletter Popup" style={{ width: "100%", height: "auto", objectFit: "cover" }} />}
           <Box p={6} textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" mb={2}>{popup.title}</Text>
             {!subscribed ? (
