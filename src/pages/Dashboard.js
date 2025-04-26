@@ -24,6 +24,7 @@ import HeaderMenuManager from '../components/dashboard/HeaderMenuManager';
 import FooterManager from '../components/dashboard/FooterManager';
 import FeedbackDashboard from '../components/dashboard/FeedbackDashboard';
 import PopupManager from '../components/dashboard/PopupManager';
+import NewsletterPopupManager from '../components/dashboard/NewsletterPopupManager';
 
 import { Link, Routes, Route } from 'react-router-dom';
 
@@ -205,6 +206,7 @@ setUnreadCount(Array.isArray(messagesData) ? messagesData.filter(msg => msg.stat
         <Route path="videos" element={<VideosManager videos={videos} onChange={fetchAll} />} />
         <Route path="messages" element={<MessagesManager messages={messages} onChange={fetchAll} />} />
         <Route path="feedback" element={<FeedbackDashboard />} />
+        <Route path="newsletter" element={<NewsletterPopupManager />} />
         <Route path="popup" element={<PopupManager />} />
       </Routes>
     </AdminDashboardLayout>
