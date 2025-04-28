@@ -27,24 +27,36 @@ export default function PopupModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
+    console.log(
+      "Fetching newsletter data from:",
+      `${baseUrl}/api/newsletter/all`
+    );
     fetch(`${baseUrl}/api/newsletter/all`)
       .then(async (res) => {
+        console.log("Newsletter response status:", res.status);
         const contentType = res.headers.get("content-type");
         if (contentType?.includes("application/json")) {
           return res.json();
         }
+        console.log("Invalid content type:", contentType);
         return [];
       })
       .then((data) => {
+        console.log("Newsletter data received:", data);
         const list = Array.isArray(data)
           ? data.filter((item) => item.enabled)
           : [];
+        console.log("Filtered newsletter items:", list);
         if (list.length > 0) {
+          console.log("Setting active popup:", list[0]);
           setPopup(list[0]);
           onOpen();
         }
       })
-      .catch(() => setPopup(null));
+      .catch((error) => {
+        console.error("Newsletter fetch error:", error);
+        setPopup(null);
+      });
     // eslint-disable-next-line
   }, []);
 
@@ -52,18 +64,33 @@ export default function PopupModal() {
 
   // Refactored to avoid nested ternary operations
   let imageUrl = null;
+  console.log("Processing backgroundBanner:", popup.backgroundBanner);
+
   if (popup.backgroundBanner) {
     if (popup.backgroundBanner.startsWith("http")) {
       imageUrl = popup.backgroundBanner;
+      console.log("Using direct URL:", imageUrl);
     } else if (popup.backgroundBanner.startsWith("/")) {
       imageUrl = `${baseUrl}${popup.backgroundBanner}`;
+      console.log("Using path with baseUrl (with slash):", imageUrl);
     } else {
       imageUrl = `${baseUrl}/${popup.backgroundBanner}`;
+      console.log("Using path with baseUrl (adding slash):", imageUrl);
     }
   }
 
   // For debugging
-  console.log("Newsletter popup image URL:", imageUrl);
+  console.log("Final newsletter popup image URL:", imageUrl);
+
+  // Test image loading directly
+  if (imageUrl) {
+    const testImg = new Image();
+    testImg.onload = () =>
+      console.log("Image URL valid and loadable:", imageUrl);
+    testImg.onerror = () =>
+      console.error("Image URL failed to load:", imageUrl);
+    testImg.src = imageUrl;
+  }
 
   return (
     <Modal
@@ -77,11 +104,32 @@ export default function PopupModal() {
         <ModalCloseButton />
         <ModalBody p={0}>
           {imageUrl && (
-            <CloudinaryImage
-              src={imageUrl}
-              alt="Newsletter Popup"
-              style={{ width: "100%", height: "auto", objectFit: "cover" }}
-            />
+            <>
+              <CloudinaryImage
+                src={imageUrl}
+                alt="Newsletter Popup"
+                style={{ width: "100%", height: "auto", objectFit: "cover" }}
+              />
+              {/* Direct fallback image in case CloudinaryImage fails */}
+              <img
+                src={imageUrl}
+                alt="Newsletter Popup Fallback"
+                style={{
+                  display: "none", // Hidden by default
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                }}
+                onError={(e) => (e.target.style.display = "none")}
+                onLoad={(e) => {
+                  // Only show if CloudinaryImage is not visible
+                  const primaryImg = e.target.previousSibling;
+                  if (primaryImg && !primaryImg.complete) {
+                    e.target.style.display = "block";
+                  }
+                }}
+              />
+            </>
           )}
           <Box p={6} textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" mb={2}>
