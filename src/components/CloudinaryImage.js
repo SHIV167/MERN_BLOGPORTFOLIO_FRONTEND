@@ -8,7 +8,8 @@ const cld = new Cloudinary({
   cloud: {
     cloudName:
       process.env.REACT_APP_CLOUDINARY_CLOUD_NAME ||
-      process.env.CLOUDINARY_CLOUD_NAME,
+      process.env.CLOUDINARY_CLOUD_NAME ||
+      "dj15ypnx8", // Fallback to your actual cloud name
   },
 });
 
@@ -44,11 +45,25 @@ export default function CloudinaryImage({ src, alt, ...rest }) {
     );
   }
 
-  // Check if it's a Cloudinary URL or a regular URL
-  if (
-    src.includes("cloudinary.com") ||
-    (!src.startsWith("http") && !src.startsWith("/"))
-  ) {
+  // IMPORTANT CHANGE: For full Cloudinary URLs, use a direct img tag
+  // instead of AdvancedImage to avoid SDK processing issues
+  if (src.includes("cloudinary.com")) {
+    console.log("Using direct img tag for Cloudinary URL");
+    return (
+      <img
+        src={src}
+        alt={alt}
+        {...rest}
+        onError={(e) => {
+          console.error("Cloudinary URL image failed to load:", src);
+          setError(true);
+        }}
+      />
+    );
+  }
+
+  // For relative file paths to be processed by Cloudinary
+  if (!src.startsWith("http") && !src.startsWith("/")) {
     // For Cloudinary images
     try {
       // derive your publicId (including folder)
