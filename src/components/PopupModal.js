@@ -105,30 +105,24 @@ export default function PopupModal() {
         <ModalBody p={0}>
           {imageUrl && (
             <>
-              <CloudinaryImage
-                src={imageUrl}
-                alt="Newsletter Popup"
-                style={{ width: "100%", height: "auto", objectFit: "cover" }}
-              />
-              {/* Direct fallback image in case CloudinaryImage fails */}
-              <img
-                src={imageUrl}
-                alt="Newsletter Popup Fallback"
-                style={{
-                  display: "none", // Hidden by default
-                  width: "100%",
-                  height: "auto",
-                  objectFit: "cover",
-                }}
-                onError={(e) => (e.target.style.display = "none")}
-                onLoad={(e) => {
-                  // Only show if CloudinaryImage is not visible
-                  const primaryImg = e.target.previousSibling;
-                  if (primaryImg && !primaryImg.complete) {
-                    e.target.style.display = "block";
-                  }
-                }}
-              />
+              {/* Use simpler approach for Cloudinary URLs to avoid Cloudinary SDK issues */}
+              {imageUrl.includes("cloudinary.com") ? (
+                <img
+                  src={imageUrl}
+                  alt="Newsletter Popup Direct"
+                  style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                  onError={(e) => {
+                    console.error("Direct image failed to load:", imageUrl);
+                    e.target.style.display = "none";
+                  }}
+                />
+              ) : (
+                <CloudinaryImage
+                  src={imageUrl}
+                  alt="Newsletter Popup"
+                  style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                />
+              )}
             </>
           )}
           <Box p={6} textAlign="center">
