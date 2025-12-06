@@ -116,7 +116,7 @@ export default function Header() {
                     ))}
                 <Button
                   as="a"
-                  href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                  href="https://shivjhawebtech.online/wp-content/uploads/2025/12/Resume_2025_RENDER_LATEST_DECEMBER.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="ghost"
@@ -130,9 +130,9 @@ export default function Header() {
             </HStack>
 
             <HStack spacing={3} align="center">
-              <IconButton as="a" href="https://github.com/yourusername" aria-label="GitHub" icon={<FaGithub />} display={{ base: 'none', md: 'flex' }} />
-              <IconButton as="a" href="https://linkedin.com/in/yourusername" aria-label="LinkedIn" icon={<FaLinkedinIn />} display={{ base: 'none', md: 'flex' }} />
-              <IconButton as="a" href="https://youtube.com/@yourchannel" aria-label="YouTube" icon={<FaYoutube />} display={{ base: 'none', md: 'flex' }} />
+              <IconButton as="a" href="https://github.com/SHIV167" aria-label="GitHub" icon={<FaGithub />} display={{ base: 'none', md: 'flex' }} />
+              <IconButton as="a" href="https://www.linkedin.com/in/shiv-kumar-jha-91106955" aria-label="LinkedIn" icon={<FaLinkedinIn />} display={{ base: 'none', md: 'flex' }} />
+              <IconButton as="a" href="https://www.youtube.com/@jhashiv5" aria-label="YouTube" icon={<FaYoutube />} display={{ base: 'none', md: 'flex' }} />
               <Button onClick={toggleColorMode} aria-label="Toggle color mode">
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
